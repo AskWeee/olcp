@@ -61,4 +61,8 @@ export class TadDbConnectionInfoService {
     // save success
     console.log('my object id = ', myResult.connection_id);
   }
+
+  async test() {
+
+  }
 }

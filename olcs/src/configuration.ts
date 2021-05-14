@@ -19,11 +19,14 @@ export class ContainerLifeCycle implements ILifeCycle {
   @App()
   app: Application;
 
-  // @Inject()
-  // dbCore: string;
+
+  //@Inject()
+  //dbCore: DbCore;
 
   async onReady(container: IMidwayContainer): Promise<void> {
-    console.log("hello world");
+    //this.app.connection = "hello world";
+    let message = "this.dbCore.connectionString";
+    console.log(message);
     // this.dbCore = "dbCore.connect"; // .connect();
 
   }
