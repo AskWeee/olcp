@@ -27,5 +27,19 @@ export class TadDbConnectionInfo {
 
   @Column()
   db_type: string;
+
+  /*
+let t = {
+    "connection_id": 1,
+    "connection_name": "test",
+    "db_type": "mysql",
+    "db_host": '10.12.2.104',
+    "db_port": '3306',
+    "db_username": 'root',
+    "db_password": 'root123',
+    "db_sid": 'olcdb'
+  }
+
+   */
 }
 

@@ -22,15 +22,38 @@ export class TadProductRelService {
     return myResult;
   }
 
-  async save() {
+  async save(product_line_id: number, product_id: number, product_manager_id: number) {
     let myObject = new TadProductRel();
-    myObject.product_line_id = 1;
-    myObject.product_id = 1;
-    myObject.product_manager_id = 1;
+    myObject.product_line_id = product_line_id;
+    myObject.product_id = product_id;
+    myObject.product_manager_id = product_manager_id;
 
     const myResult = await this.tableModel.save(myObject);
 
-    console.log('my object id = ', myResult.product_rel_id);
+    console.log('result = ', myResult);
+    return myResult
+  }
+
+  async update(id: number, product_line_id: number, product_id: number, product_manager_id: number) {
+    let myObject = await this.tableModel.findOne(id);
+
+    myObject.product_line_id = product_line_id;
+    myObject.product_id = product_id;
+    myObject.product_manager_id = product_manager_id;
+
+    const myResult = await this.tableModel.save(myObject);
+
+    console.log('result = ', myResult);
+    return myResult;
+  }
+
+  async delete(id: number) {
+    let myObject = await this.tableModel.findOne(id);
+
+    const myResult = await this.tableModel.remove(myObject);
+
+    console.log('result = ', myResult);
+    return myResult;
   }
 
   async test() {

@@ -22,16 +22,37 @@ export class TadModuleInfoService {
     return myResult;
   }
 
-  async save() {
+  async save(name: string, desc: string, leader: string) {
     let myObject = new TadModuleInfo();
-    myObject.product_id = 1;
-    myObject.module_name = "自研软件产品管理";
-    myObject.module_desc = "自研软件产品管理";
-    myObject.module_leader = "李博源";
+    myObject.module_name = name;
+    myObject.module_desc = desc;
+    myObject.module_leader = leader;
 
     const myResult = await this.tableModel.save(myObject);
 
-    console.log('my object id = ', myResult.module_id);
+    console.log('result = ', myResult);
+    return myResult;
+  }
+
+  async update(id: number, name: string, desc: string, leader: string) {
+    let myObject = await this.tableModel.findOne(id);
+    myObject.module_name = name;
+    myObject.module_desc = desc;
+    myObject.module_leader = leader;
+
+    const myResult = await this.tableModel.save(myObject);
+
+    console.log('result = ', myResult);
+    return myResult;
+  }
+
+  async delete(id: number) {
+    let myObject = await this.tableModel.findOne(id);
+
+    const myResult = await this.tableModel.remove(myObject);
+
+    console.log('result = ', myResult);
+    return myResult;
   }
 
   async test() {

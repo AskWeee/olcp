@@ -22,15 +22,37 @@ export class TadProductVersionInfoService {
     return myResult;
   }
 
-  async save() {
+  async save(name: string, desc: string) {
     let myObject = new TadProductVersionInfo();
-    myObject.product_id = 1;
-    myObject.version_name = "预言版本";
-    myObject.version_desc = "预言版本";
+
+    myObject.version_name = name;
+    myObject.version_desc = desc;
 
     const myResult = await this.tableModel.save(myObject);
 
-    console.log('my object id = ', myResult.version_id);
+    console.log('result = ', myResult.version_id);
+    return myResult;
+  }
+
+  async update(id: number, name: string, desc: string) {
+    let myObject = await this.tableModel.findOne(id);
+
+    myObject.version_name = name;
+    myObject.version_desc = desc;
+
+    const myResult = await this.tableModel.save(myObject);
+
+    console.log('result = ', myResult);
+    return myResult;
+  }
+
+  async delete(id: number) {
+    let myObject = await this.tableModel.findOne(id);
+
+    const myResult = await this.tableModel.remove(myObject);
+
+    console.log('result = ', myResult);
+    return myResult;
   }
 
   async test() {

@@ -1,68 +1,143 @@
-import { Provide} from '@midwayjs/decorator';
-import { InjectEntityModel } from '@midwayjs/orm';
-import { TadDbConnectionInfo } from '../../entity/TadDbConnectionInfo';
-import { Repository } from 'typeorm';
+import {Provide} from '@midwayjs/decorator';
+import {InjectEntityModel} from '@midwayjs/orm';
+import {TadDbConnectionInfo} from '../../entity/TadDbConnectionInfo';
+import {Repository} from 'typeorm';
 
 @Provide()
 export class TadDbConnectionInfoService {
   @InjectEntityModel(TadDbConnectionInfo)
   tadDbConnectionInfoModel: Repository<TadDbConnectionInfo>;
 
-  // find
   async findAll() {
-    // find All
     let myResult = await this.tadDbConnectionInfoModel.find();
-    console.log("All connections from the db: ", myResult)
 
-    // // find first
-    // let firstPhoto = await this.tadDbConnectionInfoModel.findOne(1);
-    // console.log("First photo from the db: ", firstPhoto);
-    //
-    // // find one by name
-    // let meAndBearsPhoto = await this.tadDbConnectionInfoModel.findOne({ name: "Me and Bears" });
-    // console.log("Me and Bears photo from the db: ", meAndBearsPhoto);
-    //
-    // // find by views
-    // let allViewedPhotos = await this.tadDbConnectionInfoModel.find({ views: 1 });
-    // console.log("All viewed photos: ", allViewedPhotos);
-    //
-    // let allPublishedPhotos = await this.tadDbConnectionInfoModel.find({ isPublished: true });
-    // console.log("All published photos: ", allPublishedPhotos);
-    //
-    // // find and get count
-    // let [allPhotos, photosCount] = await this.tadDbConnectionInfoModel.findAndCount();
-    // console.log("All photos: ", allPhotos);
-    // console.log("Photos count: ", photosCount);
+    console.log("result = ", myResult);
+    return myResult;
   }
 
   async find(id: number) {
     if (id === undefined || id.toString() === '') return null;
 
     let myResult = await this.tadDbConnectionInfoModel.findOne({connection_id: id});
-    console.log("one connection from the db: ", myResult);
+
+    console.log("result = ", myResult);
+    return myResult;
+  }
+
+  async save(
+    connection_name: string,
+    db_host: string,
+    db_port: string,
+    db_sid: string,
+    db_username: string,
+    db_password: string,
+    db_type: string) {
+
+    let myObject = new TadDbConnectionInfo();
+
+    myObject.connection_name = connection_name;
+    myObject.db_type = db_type;
+    myObject.db_host = db_host;
+    myObject.db_port = db_port;
+    myObject.db_sid = db_sid;
+    myObject.db_username = db_username;
+    myObject.db_password = db_password;
+
+    const myResult = await this.tadDbConnectionInfoModel.save(myObject);
+
+    console.log('result ', myResult);
+    return myResult;
+  }
+
+  async update(
+    id: number,
+    connection_name: string,
+    db_host: string,
+    db_port: string,
+    db_sid: string,
+    db_username: string,
+    db_password: string,
+    db_type: string) {
+
+    let myObject = await this.tadDbConnectionInfoModel.findOne(id);
+
+    myObject.connection_name = connection_name;
+    myObject.db_type = db_type;
+    myObject.db_host = db_host;
+    myObject.db_port = db_port;
+    myObject.db_sid = db_sid;
+    myObject.db_username = db_username;
+    myObject.db_password = db_password;
+
+    const myResult = await this.tadDbConnectionInfoModel.save(myObject);
+
+    console.log('result = ', myResult);
+    return myResult;
+  }
+
+  async delete(id: number) {
+    let myObject = await this.tadDbConnectionInfoModel.findOne(id);
+
+    const myResult = await this.tadDbConnectionInfoModel.remove(myObject);
+
+    console.log('result = ', myResult);
+    return myResult;
+  }
+
+  async getSchemas(connInfo: TadDbConnectionInfo) {
+    let myResult;
+
+    if (connInfo.db_type == "mysql") {
+      let myDb = require("mysql");
+      let connection = myDb.createConnection({
+        host     : '10.12.2.104',
+        user     : 'root',
+        password : 'root123',
+        database : 'olcdb'
+      });
+      myResult = connection.connect();
+      connection.end();
+    } else {
+      let myDb = require("oracledb");
+      let connection = myDb.createConnection({
+        host     : '10.12.2.104',
+        user     : 'root',
+        password : 'root123',
+        database : 'olcdb'
+      });
+      myResult = connection.connect();
+      connection.end();
+    }
 
     return myResult;
   }
 
-  // save
-  async save() {
-    // create a entity object
-    let myObject = new TadDbConnectionInfo();
-    myObject.db_host = "localhost";
-    myObject.db_port = "3306";
-    myObject.db_sid = "olcdb";
-    myObject.db_username = "root";
-    myObject.db_password = "root123";
-    myObject.connection_name = "公司MySQL";
+  async test(connInfo: TadDbConnectionInfo) {
 
-    // save entity
-    const myResult = await this.tadDbConnectionInfoModel.save(myObject);
+    let myResult;
 
-    // save success
-    console.log('my object id = ', myResult.connection_id);
-  }
+    if (connInfo.db_type == "mysql") {
+      let myDb = require("mysql");
+      let connection = myDb.createConnection({
+        host     : '10.12.2.104',
+        user     : 'root',
+        password : 'root123',
+        database : 'olcdb'
+      });
+      myResult = connection.connect();
+      connection.end();
+    } else {
+      let myDb = require("oracledb");
+      let connection = myDb.createConnection({
+        host     : '10.12.2.104',
+        user     : 'root',
+        password : 'root123',
+        database : 'olcdb'
+      });
+      myResult = connection.connect();
+      connection.end();
+    }
 
-  async test() {
-
+    return myResult;
   }
 }

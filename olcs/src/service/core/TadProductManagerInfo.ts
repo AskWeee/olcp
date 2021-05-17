@@ -22,16 +22,40 @@ export class TadProductManagerInfoService {
     return myResult;
   }
 
-  async save() {
+  async save(name: string, tel_no: string, email_addr: string, work_addr: string) {
     let myObject = new TadProductManagerInfo();
-    myObject.product_manager_name = "金博";
-    myObject.tel_no = "13801381380";
-    myObject.email_addr = "admin@boco.com.cn";
-    myObject.work_addr = "北京";
+
+    myObject.product_manager_name = name;
+    myObject.tel_no = tel_no;
+    myObject.email_addr = email_addr;
+    myObject.work_addr = work_addr;
 
     const myResult = await this.tableModel.save(myObject);
 
     console.log('my object id = ', myResult.product_manager_id);
+  }
+
+  async update(id: number, name: string, tel_no: string, email_addr: string, work_addr: string) {
+    let myObject = await this.tableModel.findOne(id);
+
+    myObject.product_manager_name = name;
+    myObject.tel_no = tel_no;
+    myObject.email_addr = email_addr;
+    myObject.work_addr = work_addr;
+
+    const myResult = await this.tableModel.save(myObject);
+
+    console.log('result = ', myResult);
+    return myResult;
+  }
+
+  async delete(id: number) {
+    let myObject = await this.tableModel.findOne(id);
+
+    const myResult = await this.tableModel.remove(myObject);
+
+    console.log('result = ', myResult);
+    return myResult;
   }
 
   async test() {

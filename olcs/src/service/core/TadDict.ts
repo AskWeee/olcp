@@ -1,12 +1,12 @@
 import { Provide} from '@midwayjs/decorator';
 import { InjectEntityModel } from '@midwayjs/orm';
 import { Repository } from 'typeorm';
-import {TadDbUser} from "../../entity/TadDbUser";
+import {TadDict} from "../../entity/TadDict";
 
 @Provide()
-export class TadDbUserService {
-  @InjectEntityModel(TadDbUser)
-  tableModel: Repository<TadDbUser>;
+export class TadDictService {
+  @InjectEntityModel(TadDict)
+  tableModel: Repository<TadDict>;
 
   async findAll() {
     let myResult = await this.tableModel.find();
@@ -16,29 +16,30 @@ export class TadDbUserService {
   async find(id: number) {
     if (id === undefined || id.toString() === '') return null;
 
-    let myResult = await this.tableModel.findOne({user_id: id});
+    let myResult = await this.tableModel.findOne({id: id});
     console.log("one connection from the db: ", myResult);
 
     return myResult;
   }
 
-  async save(name: string, desc: string) {
-    let myObject = new TadDbUser();
-
-    myObject.user_name = name;
-    myObject.user_desc = desc;
+  async save(type: string, name: string, desc: string) {
+    let myObject = new TadDict();
+    myObject.type = type;
+    myObject.name = name;
+    myObject.desc = desc;
 
     const myResult = await this.tableModel.save(myObject);
 
-    console.log('result = ', myResult.user_id);
+    console.log('result', myResult);
     return myResult;
   }
 
-  async update(id: number, name: string, desc: string) {
+  async update(id: number, type: string, name: string, desc: string) {
     let myObject = await this.tableModel.findOne(id);
 
-    myObject.user_name = name;
-    myObject.user_desc = desc;
+    myObject.type = type;
+    myObject.name = name;
+    myObject.desc = desc;
 
     const myResult = await this.tableModel.save(myObject);
 
