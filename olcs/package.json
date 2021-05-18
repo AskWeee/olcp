@@ -11,6 +11,7 @@
     "@midwayjs/swagger": "^1.0.7",
     "@midwayjs/web": "^2.3.0",
     "egg": "^2.0.0",
+    "egg-cors": "^2.2.3",
     "egg-scripts": "^2.10.0",
     "mysql": "^2.18.1",
     "oracledb": "^5.1.0"

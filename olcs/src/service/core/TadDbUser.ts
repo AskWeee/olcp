@@ -10,23 +10,26 @@ export class TadDbUserService {
 
   async findAll() {
     let myResult = await this.tableModel.find();
-    console.log("All connections from the db: ", myResult)
+
+    console.log("result = ", myResult)
+    return myResult;
   }
 
   async find(id: number) {
     if (id === undefined || id.toString() === '') return null;
 
     let myResult = await this.tableModel.findOne({user_id: id});
-    console.log("one connection from the db: ", myResult);
 
+    console.log("one connection from the db: ", myResult);
     return myResult;
   }
 
-  async save(name: string, desc: string) {
+  async save(name: string, desc: string, product_line_id: number) {
     let myObject = new TadDbUser();
 
     myObject.user_name = name;
     myObject.user_desc = desc;
+    myObject.product_line_id = product_line_id;
 
     const myResult = await this.tableModel.save(myObject);
 
@@ -34,11 +37,12 @@ export class TadDbUserService {
     return myResult;
   }
 
-  async update(id: number, name: string, desc: string) {
+  async update(id: number, name: string, desc: string, product_line_id: number) {
     let myObject = await this.tableModel.findOne(id);
 
     myObject.user_name = name;
     myObject.user_desc = desc;
+    myObject.product_line_id = product_line_id;
 
     const myResult = await this.tableModel.save(myObject);
 

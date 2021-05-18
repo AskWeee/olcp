@@ -25,58 +25,27 @@ export class TadTableService {
     return myResult;
   }
 
-  async save(name: string,
-             desc: string,
-             table_type_id: number,
-             table_label_id: number,
-             db_user_id: number,
-             module_id: number,
-             create_user_id: number,
-             create_time: string,
-             modify_user_id: number,
-             modify_time: string) {
-    let myObject = new TadTable();
+  async save(table: TadTable) {
 
-    myObject.table_name = name;
-    myObject.table_desc = desc;
-    myObject.table_type_id = table_type_id;
-    myObject.table_label_id = table_label_id;
-    myObject.db_user_id = db_user_id;
-    myObject.module_id = module_id;
-    myObject.create_user_id = create_user_id;
-    myObject.create_time = create_time;
-    myObject.modify_user_id = modify_user_id;
-    myObject.modify_time = modify_time;
-
-    const myResult = await this.tableModel.save(myObject);
+    const myResult = await this.tableModel.save(table);
 
     console.log('result', myResult);
     return myResult;
   }
 
-  async update(id: number,
-               name: string,
-               desc: string,
-               table_type_id: number,
-               table_label_id: number,
-               db_user_id: number,
-               module_id: number,
-               create_user_id: number,
-               create_time: string,
-               modify_user_id: number,
-               modify_time: string) {
-    let myObject = await this.tableModel.findOne(id);
+  async update(table: TadTable) {
+    let myObject = await this.tableModel.findOne(table.table_id);
 
-    myObject.table_name = name;
-    myObject.table_desc = desc;
-    myObject.table_type_id = table_type_id;
-    myObject.table_label_id = table_label_id;
-    myObject.db_user_id = db_user_id;
-    myObject.module_id = module_id;
-    myObject.create_user_id = create_user_id;
-    myObject.create_time = create_time;
-    myObject.modify_user_id = modify_user_id;
-    myObject.modify_time = modify_time;
+    myObject.table_name = table.table_name;
+    myObject.table_desc = table.table_desc;
+    myObject.table_type_id = table.table_type_id;
+    myObject.table_label_id = table.table_label_id;
+    myObject.db_user_id = table.db_user_id;
+    myObject.module_id = table.module_id;
+    myObject.create_user_id = table.create_user_id;
+    myObject.create_time = table.create_time;
+    myObject.modify_user_id = table.modify_user_id;
+    myObject.modify_time = table.modify_time;
 
     const myResult = await this.tableModel.save(myObject);
 

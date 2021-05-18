@@ -24,50 +24,25 @@ export class TadDbConnectionInfoService {
     return myResult;
   }
 
-  async save(
-    connection_name: string,
-    db_host: string,
-    db_port: string,
-    db_sid: string,
-    db_username: string,
-    db_password: string,
-    db_type: string) {
+  async save(connection: TadDbConnectionInfo) {
 
-    let myObject = new TadDbConnectionInfo();
-
-    myObject.connection_name = connection_name;
-    myObject.db_type = db_type;
-    myObject.db_host = db_host;
-    myObject.db_port = db_port;
-    myObject.db_sid = db_sid;
-    myObject.db_username = db_username;
-    myObject.db_password = db_password;
-
-    const myResult = await this.tadDbConnectionInfoModel.save(myObject);
+    const myResult = await this.tadDbConnectionInfoModel.save(connection);
 
     console.log('result ', myResult);
     return myResult;
   }
 
-  async update(
-    id: number,
-    connection_name: string,
-    db_host: string,
-    db_port: string,
-    db_sid: string,
-    db_username: string,
-    db_password: string,
-    db_type: string) {
+  async update(connection: TadDbConnectionInfo) {
 
-    let myObject = await this.tadDbConnectionInfoModel.findOne(id);
+    let myObject = await this.tadDbConnectionInfoModel.findOne(connection.connection_id);
 
-    myObject.connection_name = connection_name;
-    myObject.db_type = db_type;
-    myObject.db_host = db_host;
-    myObject.db_port = db_port;
-    myObject.db_sid = db_sid;
-    myObject.db_username = db_username;
-    myObject.db_password = db_password;
+    myObject.connection_name = connection.connection_name;
+    myObject.db_type = connection.db_type;
+    myObject.db_host = connection.db_host;
+    myObject.db_port = connection.db_port;
+    myObject.db_sid = connection.db_sid;
+    myObject.db_username = connection.db_username;
+    myObject.db_password = connection.db_password;
 
     const myResult = await this.tadDbConnectionInfoModel.save(myObject);
 
@@ -113,30 +88,34 @@ export class TadDbConnectionInfoService {
   }
 
   async test(connInfo: TadDbConnectionInfo) {
-
     let myResult;
 
-    if (connInfo.db_type == "mysql") {
-      let myDb = require("mysql");
-      let connection = myDb.createConnection({
-        host     : '10.12.2.104',
-        user     : 'root',
-        password : 'root123',
-        database : 'olcdb'
+    const mysql = require('mysql')
+    const pool = mysql.createPool({
+      host: connInfo.db_host,
+      port: connInfo.db_port,
+      user: 'connInfo.db_username',
+      password: connInfo.db_password,
+      database: connInfo.db_sid
+    });
+
+    let myTest = function() {
+      return new Promise(( resolve, reject ) => {
+        pool.getConnection(function(err, connection) {
+          if (err) {
+            console.log(err);
+            let message = {success: false, message: {errno: err.errno, code: err.code}}
+            resolve( message )
+          } else {
+            let message = {success: true, message: 'success'}
+            resolve(message);
+            connection.release();
+          }
+        });
       });
-      myResult = connection.connect();
-      connection.end();
-    } else {
-      let myDb = require("oracledb");
-      let connection = myDb.createConnection({
-        host     : '10.12.2.104',
-        user     : 'root',
-        password : 'root123',
-        database : 'olcdb'
-      });
-      myResult = connection.connect();
-      connection.end();
     }
+
+    myResult = await myTest();
 
     return myResult;
   }

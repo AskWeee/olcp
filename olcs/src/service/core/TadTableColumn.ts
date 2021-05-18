@@ -24,58 +24,26 @@ export class TadTableColumnService {
     return myResult;
   }
 
-  async save(table_id: number,
-             name: string,
-             desc: string,
-             column_type_id: number,
-             data_length: number,
-             default_value: string,
-             is_null: string,
-             primary_flag: string,
-             split_flag: string,
-             repeat_flag: string) {
-    let myObject = new TadTableColumn();
-
-    myObject.table_id = table_id;
-    myObject.column_name = name;
-    myObject.column_desc = desc;
-    myObject.column_type_id = column_type_id;
-    myObject.data_length = data_length;
-    myObject.default_value = default_value;
-    myObject.is_null = is_null;
-    myObject.primary_flag = primary_flag;
-    myObject.split_flag = split_flag;
-    myObject.repeat_flag = repeat_flag;
-
-    const myResult = await this.tableModel.save(myObject);
+  async save(column: TadTableColumn) {
+    const myResult = await this.tableModel.save(column);
 
     console.log('result', myResult);
     return myResult;
   }
 
-  async update(id: number,
-               table_id: number,
-               name: string,
-               desc: string,
-               column_type_id: number,
-               data_length: number,
-               default_value: string,
-               is_null: string,
-               primary_flag: string,
-               split_flag: string,
-               repeat_flag: string) {
-    let myObject = await this.tableModel.findOne(id);
+  async update(column: TadTableColumn) {
+    let myObject = await this.tableModel.findOne(column.column_id);
 
-    myObject.table_id = table_id;
-    myObject.column_name = name;
-    myObject.column_desc = desc;
-    myObject.column_type_id = column_type_id;
-    myObject.data_length = data_length;
-    myObject.default_value = default_value;
-    myObject.is_null = is_null;
-    myObject.primary_flag = primary_flag;
-    myObject.split_flag = split_flag;
-    myObject.repeat_flag = repeat_flag;
+    myObject.table_id = column.table_id;
+    myObject.column_name = column.column_name;
+    myObject.column_desc = column.column_desc;
+    myObject.column_type_id = column.column_type_id;
+    myObject.data_length = column.data_length;
+    myObject.default_value = column.default_value;
+    myObject.is_null = column.is_null;
+    myObject.primary_flag = column.primary_flag;
+    myObject.split_flag = column.split_flag;
+    myObject.repeat_flag = column.repeat_flag;
 
     const myResult = await this.tableModel.save(myObject);
 

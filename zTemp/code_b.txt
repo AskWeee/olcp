@@ -1,0 +1,17 @@
+  doTest() {
+    return axios.post("http://10.50.12.4:8060/api/core/test_db_connection", {
+          connection_id: 1,
+          connection_name: "test",
+          db_type: "mysql",
+          db_host: "test by K",
+          db_port: "3306",
+          db_username: "root",
+          db_password: "root123",
+          db_sid: "olcdb"
+        },
+        {
+          headers: {  //头部参数
+            'Content-Type': 'application/json'
+          }
+        })
+  }

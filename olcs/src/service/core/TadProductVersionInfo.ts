@@ -10,7 +10,8 @@ export class TadProductVersionInfoService {
 
   async findAll() {
     let myResult = await this.tableModel.find();
-    console.log("All connections from the db: ", myResult)
+
+    return myResult;
   }
 
   async find(id: number) {
@@ -22,11 +23,12 @@ export class TadProductVersionInfoService {
     return myResult;
   }
 
-  async save(name: string, desc: string) {
+  async save(name: string, desc: string, product_id: number) {
     let myObject = new TadProductVersionInfo();
 
     myObject.version_name = name;
     myObject.version_desc = desc;
+    myObject.product_id = product_id;
 
     const myResult = await this.tableModel.save(myObject);
 
@@ -34,11 +36,12 @@ export class TadProductVersionInfoService {
     return myResult;
   }
 
-  async update(id: number, name: string, desc: string) {
+  async update(id: number, name: string, desc: string, product_id: number) {
     let myObject = await this.tableModel.findOne(id);
 
     myObject.version_name = name;
     myObject.version_desc = desc;
+    myObject.product_id = product_id;
 
     const myResult = await this.tableModel.save(myObject);
 

@@ -1,4 +1,4 @@
-import {Inject, Controller, Post, Provide, Query, ALL} from '@midwayjs/decorator';
+import {Inject, Controller, Post, Provide, ALL, Body} from '@midwayjs/decorator';
 import {Context} from 'egg';
 import {TadDbConnectionInfoService} from "../service/core/TadDbConnectionInfo";
 import {OlcBatisService} from "../service/core/OlcBatis";
@@ -13,6 +13,16 @@ import {TadTableService} from "../service/core/TadTable";
 import {TadTableColumnService} from "../service/core/TadTableColumn";
 import {TadDictService} from "../service/core/TadDict";
 import {TadDbConnectionInfo} from "../entity/TadDbConnectionInfo";
+import {RestResult} from "./RestResult";
+import {TadProductLineInfo} from "../entity/TadProductLineInfo";
+import {TadProductInfo} from "../entity/TadProductInfo";
+import {TadModuleInfo} from "../entity/TadModuleInfo";
+import {TadProductRel} from "../entity/TadProductRel";
+import {TadProductManagerInfo} from "../entity/TadProductManagerInfo";
+import {TadProductVersionInfo} from "../entity/TadProductVersionInfo";
+import {TadDbUser} from "../entity/TadDbUser";
+import {TadTable} from "../entity/TadTable";
+import {TadTableColumn} from "../entity/TadTableColumn";
 
 @Provide()
 @Controller('/api/core')
@@ -56,445 +66,383 @@ export class APICoreController {
   @Inject()
   coreTadDict: TadDictService;
 
+  @Post('/get_tables')
+  async getTables(): Promise<any> {
+    let restResult = new RestResult();
+
+    const data = await this.coreOlcBatisService.getTables();
+    restResult.data = data;
+
+    return restResult;
+  }
+
   @Post('/get_types')
   async getTypes(): Promise<any> {
-    const data = await this.coreTadDict.findAll();
+    let restResult = new RestResult();
 
-    return {success: true, message: "success", data: data};
+    const data = await this.coreTadDict.findAll();
+    restResult.data = data;
+
+    return restResult;
   }
 
   @Post('/get_db_connections')
   async getDbConnections(): Promise<any> {
-    const data = await this.coreTadDbConnectionInfoService.findAll();
+    let restResult = new RestResult();
 
-    return {success: true, message: "success", data: data};
+    const data = await this.coreTadDbConnectionInfoService.findAll();
+    restResult.data = data;
+
+    return restResult;
   }
 
   @Post('/get_db_connection')
-  async getDbConnection(@Query() id: number): Promise<any> {
-    const myResult = await this.coreTadDbConnectionInfoService.find(id);
+  async getDbConnection(@Body(ALL) connection: TadDbConnectionInfo): Promise<any> {
+    let restResult = new RestResult();
 
-    return {success: true, message: "success", data: myResult};
+    const data = await this.coreTadDbConnectionInfoService.find(connection.connection_id);
+    restResult.data = data;
+
+    return restResult;
   }
 
   @Post('/add_db_connection')
-  async addDbConnection(
-    @Query() connection_name: string,
-    @Query() db_type: string,
-    @Query() db_host: string,
-    @Query() db_port: string,
-    @Query() db_sid: string,
-    @Query() db_username: string,
-    @Query() db_password: string): Promise<any> {
+  async addDbConnection(@Body(ALL) connection: TadDbConnectionInfo): Promise<any> {
+    let restResult = new RestResult();
 
-    const myResult = await this.coreTadDbConnectionInfoService.save(
-      connection_name,
-      db_type,
-      db_host,
-      db_port,
-      db_sid,
-      db_username,
-      db_password);
+    const data = await this.coreTadDbConnectionInfoService.save(connection);
+    restResult.data = data;
 
-    return {success: true, message: "success", data: myResult};
+    return restResult;
   }
 
   @Post('/update_db_connection')
-  async updateDbConnection(
-    @Query() connection_id: number,
-    @Query() connection_name: string,
-    @Query() db_type: string,
-    @Query() db_host: string,
-    @Query() db_port: string,
-    @Query() db_sid: string,
-    @Query() db_username: string,
-    @Query() db_password: string): Promise<any> {
+  async updateDbConnection(@Body(ALL) connection: TadDbConnectionInfo): Promise<any> {
+    let restResult = new RestResult();
 
-    const myResult = await this.coreTadDbConnectionInfoService.update(
-      connection_id,
-      connection_name,
-      db_type,
-      db_host,
-      db_port,
-      db_sid,
-      db_username,
-      db_password);
-    return {success: true, message: "success", data: myResult};
+    const data = await this.coreTadDbConnectionInfoService.update(connection);
+    restResult.data = data;
+
+    return restResult;
   }
 
   @Post('/delete_db_connection')
-  async deleteDbConnection(
-    @Query() connection_id: number): Promise<any> {
+  async deleteDbConnection(@Body(ALL) connection: TadDbConnectionInfo): Promise<any> {
+    let restResult = new RestResult();
 
-    const myResult = await this.coreTadDbConnectionInfoService.delete(connection_id);
+    const myResult = await this.coreTadDbConnectionInfoService.delete(connection.connection_id);
 
-    return {success: true, message: "success", data: myResult};
+    restResult.data = myResult;
+    return restResult;
   }
 
   @Post('/test_db_connection')
-  async testDbConnection(@Query(ALL) connInfo: TadDbConnectionInfo): Promise<any> {
+  async testDbConnection(@Body(ALL) connInfo: TadDbConnectionInfo): Promise<any> {
+    let restResult = new RestResult();
 
-    //const connInfo: TadDbConnectionInfo = ctx.request.body;
+    const data = await this.coreTadDbConnectionInfoService.test(connInfo);
+    restResult.data = data;
 
-    const myResult = await this.coreTadDbConnectionInfoService.test(connInfo);
-
-    return {success: true, message: "success", data: myResult};
+    return restResult;
   }
 
   @Post('/get_products')
   async getProducts(): Promise<any> {
-    const myResult = await this.coreOlcBatisService.getProducts();
-    console.log(myResult);
+    let restResult = new RestResult();
 
-    return {success: true, message: "success", data: myResult};
-    // let myResult;
-    // let mysql = require("mysql");
-    // let connection = mysql.createConnection({
-    //   host     : '10.12.2.104',
-    //   user     : 'root',
-    //   password : 'root123',
-    //   database : 'olcdb'
-    // });
-    // connection.connect();
-    //
-    // let strSql = "select" +
-    //   " tpli.product_line_id," +
-    //   " tpli.product_line_name," +
-    //   " tpli.product_line_desc," +
-    //   " tpli.user_id," +
-    //   " tpli.user_name," +
-    //   " tpi.product_id," +
-    //   " tpi.product_name," +
-    //   " tpi.version_name," +
-    //   " tpi.module_id," +
-    //   " tpi.module_name," +
-    //   " tpi.module_leader," +
-    //   " tpi.module_desc," +
-    //   " tpmi.product_manager_name" +
-    //   " from " +
-    //   " tad_product_rel tpr " +
-    //   " left join (" +
-    //   " select " +
-    //   " _tpli.product_line_id," +
-    //   " _tpli.product_line_name," +
-    //   " _tpli.product_line_desc," +
-    //   " tdu.user_id," +
-    //   " tdu.user_name" +
-    //   " from " +
-    //   " tad_product_line_info _tpli " +
-    //   " left join tad_db_user tdu on _tpli.product_line_id = tdu.product_line_id" +
-    //   " ) tpli on tpr.product_line_id = tpli.product_line_id" +
-    //   " left join (" +
-    //   " select " +
-    //   " _tpi.product_id," +
-    //   " _tpi.product_name," +
-    //   " tmi.module_id," +
-    //   " tmi.module_name," +
-    //   " tmi.module_leader, " +
-    //   " tmi.module_desc," +
-    //   " tpvi.version_name" +
-    //   " from " +
-    //   " tad_product_info _tpi" +
-    //   " left join tad_module_info tmi on _tpi.product_id = tmi.product_id" +
-    //   " left join tad_product_version_info tpvi on _tpi.product_id = tpvi.product_id" +
-    //   " ) tpi on tpr.product_id = tpi.product_id" +
-    //   " left join tad_product_manager_info tpmi on tpr.product_manager_id = tpmi.product_manager_id";
-    //
-    // //return new Promise((resolve, reject) => {
-    // connection.query(strSql, function (error, results, fields) {
-    //   if (error) return error;
-    //
-    //   myResult = results[0];
-    //   console.log('result = ', myResult);
-    //   connection.end();
-    //   //return resolve()
-    //   //return myResult;
-    //   this.ctx.response.write("hello world");
-    //   //});
-    //
-    //
-    //   // db.query('SELECT 1', (err) => {
-    //   //   if (err) {
-    //   //     return reject(err)
-    //   //   }
-    //   //   return resolve()
-    //   // })
-    // })
-    //
-    //
-    // //return myResult;
+    const myResult = await this.coreOlcBatisService.getProducts();
+    restResult.data = myResult;
+
+    return restResult;
   }
 
   @Post('/add_product_line')
-  async addProductLine(@Query() name: string, @Query() desc: string): Promise<any> {
-    const myResult = await this.coreTadProductLineInfoService.save(name, desc);
+  async addProductLine(@Body(ALL) productLine: TadProductLineInfo): Promise<any> {
+    let restResult = new RestResult();
 
-    return {success: true, message: "success", data: myResult};
+    const data = await this.coreTadProductLineInfoService.save(productLine.product_line_name, productLine.product_line_desc);
+    restResult.data = data;
+
+    return restResult;
   }
 
   @Post('/update_product_line')
-  async updateProductLine(@Query() id: number, @Query() name: string, @Query() desc: string): Promise<any> {
-    const myResult = await this.coreTadProductLineInfoService.update(id, name, desc);
+  async updateProductLine(@Body(ALL) productLine: TadProductLineInfo): Promise<any> {
+    let restResult = new RestResult();
 
-    return {success: true, message: "success", data: myResult};
+    const data = await this.coreTadProductLineInfoService.update(productLine.product_line_id, productLine.product_line_name, productLine.product_line_desc);
+    restResult.data = data;
+
+    return restResult;
   }
 
   @Post('/delete_product_line')
-  async deleteProductLine(@Query() id: number): Promise<any> {
-    const myResult = await this.coreTadProductLineInfoService.delete(id);
+  async deleteProductLine(@Body(ALL) productLine: TadProductLineInfo): Promise<any> {
+    let restResult = new RestResult();
 
-    return {success: true, message: "success", data: myResult};
+    const data = await this.coreTadProductLineInfoService.delete(productLine.product_line_id);
+    restResult.data = data;
+
+    return restResult;
   }
 
   @Post('/add_product')
-  async addProduct(@Query() name: string, @Query() desc: string): Promise<any> {
-    const myResult = await this.coreTadProductInfoService.save(name, desc);
+  async addProduct(@Body(ALL) product: TadProductInfo): Promise<any> {
+    let restResult = new RestResult();
 
-    return {success: true, message: "success", data: myResult};
+    const data = await this.coreTadProductInfoService.save(product.product_name, product.product_desc);
+    restResult.data = data;
+
+    return restResult;
   }
 
   @Post('/update_product')
-  async updateProduct(@Query() id: number, @Query() name: string, @Query() desc: string): Promise<any> {
-    const myResult = await this.coreTadProductInfoService.update(id, name, desc);
+  async updateProduct(@Body(ALL) product: TadProductInfo): Promise<any> {
+    let restResult = new RestResult();
 
-    return {success: true, message: "success", data: myResult};
+    const data = await this.coreTadProductInfoService.update(product.product_id, product.product_name, product.product_desc);
+    restResult.data = data;
+
+    return restResult;
   }
 
   @Post('/delete_product')
-  async deleteProduct(@Query() id: number): Promise<any> {
-    const myResult = await this.coreTadProductInfoService.delete(id);
+  async deleteProduct(@Body(ALL) product: TadProductInfo): Promise<any> {
+    let restResult = new RestResult();
 
-    return {success: true, message: "success", data: myResult};
+    const data = await this.coreTadProductInfoService.delete(product.product_id);
+    restResult.data = data;
+
+    return restResult;
   }
 
   @Post('/add_module')
-  async addModule(@Query() name: string, @Query() desc: string, @Query() leader: string): Promise<any> {
-    const myResult = await this.coreTadModuleInfoService.save(name, desc, leader);
+  async addModule(@Body(ALL) module: TadModuleInfo): Promise<any> {
+    let restResult = new RestResult();
 
-    return {success: true, message: "success", data: myResult};
+    const data = await this.coreTadModuleInfoService.save(module.module_name, module.module_desc, module.module_leader);
+    restResult.data = data;
+
+    return restResult;
   }
 
   @Post('/update_module')
-  async updateModule(@Query() id: number, @Query() name: string, @Query() desc: string, @Query() leader: string): Promise<any> {
-    const myResult = await this.coreTadModuleInfoService.update(id, name, desc, leader);
+  async updateModule(@Body(ALL) module: TadModuleInfo): Promise<any> {
+    let restResult = new RestResult();
 
-    return {success: true, message: "success", data: myResult};
+    const data = await this.coreTadModuleInfoService.update(module.module_id, module.module_name, module.module_desc, module.module_leader);
+    restResult.data = data;
+
+    return restResult;
   }
 
   @Post('/delete_module')
-  async deleteModule(@Query() id: number): Promise<any> {
-    const myResult = await this.coreTadModuleInfoService.delete(id);
+  async deleteModule(@Body(ALL) module: TadModuleInfo): Promise<any> {
+    let restResult = new RestResult();
 
-    return {success: true, message: "success", data: myResult};
+    const data = await this.coreTadModuleInfoService.delete(module.module_id);
+    restResult.data = data;
+
+    return restResult;
   }
 
   @Post('/add_product_rel')
-  async addProductRel(@Query() product_line_id: number, @Query() product_id: number, @Query() product_manager_id: number): Promise<any> {
-    const myResult = await this.coreTadProductRelService.save(product_line_id, product_id, product_manager_id);
+  async addProductRel(@Body(ALL) productRel: TadProductRel): Promise<any> {
+    let restResult = new RestResult();
 
-    return {success: true, message: "success", data: myResult};
+    const data = await this.coreTadProductRelService.save(productRel.product_line_id, productRel.product_id, productRel.product_manager_id);
+    restResult.data = data;
+
+    return restResult;
   }
 
   @Post('/update_product_rel')
-  async updateProductRel(@Query() id: number, @Query() product_line_id: number, @Query() product_id: number, @Query() product_manager_id: number): Promise<any> {
-    const myResult = await this.coreTadProductRelService.update(id, product_line_id, product_id, product_manager_id);
+  async updateProductRel(@Body(ALL) productRel: TadProductRel): Promise<any> {
+    let restResult = new RestResult();
 
-    return {success: true, message: "success", data: myResult};
+    const data = await this.coreTadProductRelService.update(productRel.product_rel_id, productRel.product_line_id, productRel.product_id, productRel.product_manager_id);
+    restResult.data = data;
+
+    return restResult;
   }
 
   @Post('/delete_product_rel')
-  async deleteProductRel(@Query() id: number): Promise<any> {
-    const myResult = await this.coreTadProductRelService.delete(id);
-    return {success: true, message: "success", data: myResult};
+  async deleteProductRel(@Body(ALL) productRel: TadProductRel): Promise<any> {
+    let restResult = new RestResult();
+
+    const data = await this.coreTadProductRelService.delete(productRel.product_rel_id);
+    restResult.data = data;
+
+    return restResult;
   }
 
   @Post('/add_product_manager')
-  async addProductManager(@Query() name: string, @Query() desc: string, @Query() email_addr: string, @Query() work_addr: string): Promise<any> {
-    const myResult = await this.coreTadProductManagerInfoService.save(name, desc, email_addr, work_addr);
+  async addProductManager(@Body(ALL) manager: TadProductManagerInfo): Promise<any> {
+    let restResult = new RestResult();
 
-    return {success: true, message: "success", data: myResult};
+    const data = await this.coreTadProductManagerInfoService.save(manager.product_manager_name, manager.tel_no, manager.email_addr, manager.work_addr);
+    restResult.data = data;
+
+    return restResult;
   }
 
   @Post('/update_product_manager')
-  async updateProductManager(@Query() id: number, @Query() name: string, @Query() desc: string, @Query() email_addr: string, @Query() work_addr: string): Promise<any> {
-    const myResult = await this.coreTadProductManagerInfoService.update(id, name, desc, email_addr, work_addr);
+  async updateProductManager(@Body(ALL) manager: TadProductManagerInfo): Promise<any> {
+    let restResult = new RestResult();
 
-    return {success: true, message: "success", data: myResult};
+    const data = await this.coreTadProductManagerInfoService.update(manager.product_manager_id, manager.product_manager_name, manager.tel_no, manager.email_addr, manager.work_addr);
+    restResult.data = data;
+
+    return restResult;
   }
 
   @Post('/delete_product_manager')
-  async deleteProductManager(@Query() id: number): Promise<any> {
-    const myResult = await this.coreTadProductManagerInfoService.delete(id);
+  async deleteProductManager(@Body(ALL) manger: TadProductManagerInfo): Promise<any> {
+    let restResult = new RestResult();
 
-    return {success: true, message: "success", data: myResult};
+    const data = await this.coreTadProductManagerInfoService.delete(manger.product_manager_id);
+    restResult.data = data;
+
+    return restResult;
+  }
+
+  @Post('/get_product_versions')
+  async getProductVersions(): Promise<any> {
+    let restResult = new RestResult();
+
+    const data = await this.coreTadProductVersionInfoService.findAll();
+    restResult.data = data;
+
+    return restResult;
   }
 
   @Post('/add_product_version')
-  async addProductVersion(@Query() name: string, @Query() desc: string): Promise<any> {
-    const myResult = await this.coreTadProductVersionInfoService.save(name, desc);
+  async addProductVersion(@Body(ALL) version: TadProductVersionInfo): Promise<any> {
+    let restResult = new RestResult();
 
-    return {success: true, message: "success", data: myResult};
+    const data = await this.coreTadProductVersionInfoService.save(version.version_name, version.version_desc, version.product_id);
+    restResult.data = data;
+
+    return restResult;
   }
 
   @Post('/update_product_version')
-  async updateProductVersion(@Query() id: number, @Query() name: string, @Query() desc: string): Promise<any> {
-    const myResult = await this.coreTadProductVersionInfoService.update(id, name, desc);
+  async updateProductVersion(@Body(ALL) version: TadProductVersionInfo): Promise<any> {
+    let restResult = new RestResult();
 
-    return {success: true, message: "success", data: myResult};
+    const data = await this.coreTadProductVersionInfoService.update(version.version_id, version.version_name, version.version_desc, version.product_id);
+    restResult.data = data;
+
+    return restResult;
   }
 
   @Post('/delete_product_version')
-  async deleteProductVersion(@Query() id: number): Promise<any> {
-    const myResult = await this.coreTadProductVersionInfoService.delete(id);
+  async deleteProductVersion(@Body(ALL) version: TadProductVersionInfo): Promise<any> {
+    let restResult = new RestResult();
 
-    return {success: true, message: "success", data: myResult};
+    const data = await this.coreTadProductVersionInfoService.delete(version.version_id);
+    restResult.data = data;
+
+    return restResult;
+  }
+
+  @Post('/get_db_users')
+  async getDbUsers(): Promise<any> {
+    let restResult = new RestResult();
+
+    const data = await this.coreTadDbUserService.findAll();
+    restResult.data = data;
+
+    return restResult;
   }
 
   @Post('/add_db_user')
-  async addDbUser(@Query() name: string, @Query() desc: string): Promise<any> {
-    const myResult = await this.coreTadDbUserService.save(name, desc);
+  async addDbUser(@Body(ALL) dbUser: TadDbUser): Promise<any> {
+    let restResult = new RestResult();
 
-    return {success: true, message: "success", data: myResult};
+    const data = await this.coreTadDbUserService.save(dbUser.user_name, dbUser.user_desc, dbUser.product_line_id);
+    restResult.data = data;
+
+    return restResult;
   }
 
   @Post('/update_db_user')
-  async updateDbUser(@Query() id: number, @Query() name: string, @Query() desc: string): Promise<any> {
-    const myResult = await this.coreTadDbUserService.update(id, name, desc);
+  async updateDbUser(@Body(ALL) dbUser: TadDbUser): Promise<any> {
+    let restResult = new RestResult();
 
-    return {success: true, message: "success", data: myResult};
+    const data = await this.coreTadDbUserService.update(dbUser.user_id, dbUser.user_name, dbUser.user_desc, dbUser.product_line_id);
+    restResult.data = data;
+
+    return restResult;
   }
 
   @Post('/delete_db_user')
-  async deleteDbUser(@Query() id: number): Promise<any> {
-    const myResult = await this.coreTadDbUserService.delete(id);
+  async deleteDbUser(@Body(ALL) dbUser: TadDbUser): Promise<any> {
+    let restResult = new RestResult();
 
-    return {success: true, message: "success", data: myResult};
+    const data = await this.coreTadDbUserService.delete(dbUser.user_id);
+    restResult.data = data;
+
+    return restResult;
   }
 
   @Post('/add_table')
-  async addTable(
-    @Query() name: string,
-    @Query() desc: string,
-    @Query() table_type_id: number,
-    @Query() table_label_id: number,
-    @Query() db_user_id: number,
-    @Query() module_id: number,
-    @Query() create_user_id: number,
-    @Query() create_time: string,
-    @Query() modify_user_id: number,
-    @Query() modify_time: string): Promise<any> {
-    const myResult = await this.coreTadTable.save(
-      name,
-      desc,
-      table_type_id,
-      table_label_id,
-      db_user_id,
-      module_id,
-      create_user_id,
-      create_time,
-      modify_user_id,
-      modify_time);
+  async addTable(@Body(ALL) table: TadTable): Promise<any> {
+    let restResult = new RestResult();
 
-    return {success: true, message: "success", data: myResult};
+    const data = await this.coreTadTable.save(table);
+    restResult.data = data;
+
+    return restResult;
   }
 
   @Post('/update_table')
-  async updateTable(
-    @Query() id: number,
-    @Query() name: string,
-    @Query() desc: string,
-    @Query() table_type_id: number,
-    @Query() table_label_id: number,
-    @Query() db_user_id: number,
-    @Query() module_id: number,
-    @Query() create_user_id: number,
-    @Query() create_time: string,
-    @Query() modify_user_id: number,
-    @Query() modify_time: string): Promise<any> {
-    const myResult = await this.coreTadTable.update(
-      id,
-      name,
-      desc,
-      table_type_id,
-      table_label_id,
-      db_user_id,
-      module_id,
-      create_user_id,
-      create_time,
-      modify_user_id,
-      modify_time);
+  async updateTable(@Body(ALL) table: TadTable): Promise<any> {
+    let restResult = new RestResult();
 
-    return {success: true, message: "success", data: myResult};
+    const data = await this.coreTadTable.update(table);
+    restResult.data = data;
+
+    return restResult;
   }
 
   @Post('/delete_table')
-  async deleteTable(@Query() id: number): Promise<any> {
-    const myResult = await this.coreTadTable.delete(id);
+  async deleteTable(@Body(ALL) table: TadTable): Promise<any> {
+    let restResult = new RestResult();
 
-    return {success: true, message: "success", data: myResult};
+    const data = await this.coreTadTable.delete(table.table_id);
+    restResult.data = data;
+
+    return restResult;
   }
 
   @Post('/add_table_column')
-  async addTableColumn(
-    @Query() table_id: number,
-    @Query() name: string,
-    @Query() desc: string,
-    @Query() column_type_id: number,
-    @Query() data_length: number,
-    @Query() default_value: string,
-    @Query() is_null: string,
-    @Query() primary_flag: string,
-    @Query() split_flag: string,
-    @Query() repeat_flag: string): Promise<any> {
-    const myResult = await this.coreTadTableColumn.save(
-      table_id,
-      name,
-      desc,
-      column_type_id,
-      data_length,
-      default_value,
-      is_null,
-      primary_flag,
-      split_flag,
-      repeat_flag);
+  async addTableColumn(@Body(ALL) column: TadTableColumn): Promise<any> {
+    let restResult = new RestResult();
 
-    return {success: true, message: "success", data: myResult};
+    const data = await this.coreTadTableColumn.save(column);
+    restResult.data = data;
+
+    return restResult;
   }
 
   @Post('/update_table_column')
-  async updateTableColumn(
-    @Query() id: number,
-    @Query() table_id: number,
-    @Query() name: string,
-    @Query() desc: string,
-    @Query() column_type_id: number,
-    @Query() data_length: number,
-    @Query() default_value: string,
-    @Query() is_null: string,
-    @Query() primary_flag: string,
-    @Query() split_flag: string,
-    @Query() repeat_flag: string): Promise<any> {
-    const myResult = await this.coreTadTableColumn.update(
-      id,
-      table_id,
-      name,
-      desc,
-      column_type_id,
-      data_length,
-      default_value,
-      is_null,
-      primary_flag,
-      split_flag,
-      repeat_flag);
+  async updateTableColumn(@Body(ALL) column: TadTableColumn): Promise<any> {
+    let restResult = new RestResult();
 
-    return {success: true, message: "success", data: myResult};
+    const data = await this.coreTadTableColumn.update(column);
+    restResult.data = data;
+
+    return restResult;
   }
 
   @Post('/delete_table_column')
-  async deleteTableColumn(
-    @Query() id: number): Promise<any> {
-    const myResult = await this.coreTadTableColumn.delete(id);
+  async deleteTableColumn(@Body(ALL) column: TadTableColumn): Promise<any> {
+    let restResult = new RestResult();
 
-    return {success: true, message: "success", data: myResult};
+    const data = await this.coreTadTableColumn.delete(column.column_id);
+    restResult.data = data;
+
+    return restResult;
   }
 }

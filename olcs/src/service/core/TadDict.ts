@@ -10,14 +10,14 @@ export class TadDictService {
 
   async findAll() {
     let myResult = await this.tableModel.find();
-    console.log("All connections from the db: ", myResult)
+
+    return myResult;
   }
 
   async find(id: number) {
     if (id === undefined || id.toString() === '') return null;
 
     let myResult = await this.tableModel.findOne({id: id});
-    console.log("one connection from the db: ", myResult);
 
     return myResult;
   }
