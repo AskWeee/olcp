@@ -10,53 +10,51 @@ export class TadProductRelService {
 
   async findAll() {
     let myResult = await this.tableModel.find();
-    console.log("All connections from the db: ", myResult)
+
+    console.log("findAll result = ", myResult)
+    return myResult;
   }
 
   async find(id: number) {
     if (id === undefined || id.toString() === '') return null;
 
     let myResult = await this.tableModel.findOne({product_rel_id: id});
-    console.log("one connection from the db: ", myResult);
 
+    console.log("find result = ", myResult);
     return myResult;
   }
 
-  async save(product_line_id: number, product_id: number, product_manager_id: number) {
+  async save(params: TadProductRel) {
     let myObject = new TadProductRel();
-    myObject.product_line_id = product_line_id;
-    myObject.product_id = product_id;
-    myObject.product_manager_id = product_manager_id;
+    myObject.product_line_id = params.product_line_id;
+    myObject.product_id = params.product_id;
+    myObject.product_manager_id = params.product_manager_id;
 
     const myResult = await this.tableModel.save(myObject);
 
-    console.log('result = ', myResult);
+    console.log('save result = ', myResult);
     return myResult
   }
 
-  async update(id: number, product_line_id: number, product_id: number, product_manager_id: number) {
-    let myObject = await this.tableModel.findOne(id);
+  async update(params: TadProductRel) {
+    let myObject = await this.tableModel.findOne(params.product_rel_id);
 
-    myObject.product_line_id = product_line_id;
-    myObject.product_id = product_id;
-    myObject.product_manager_id = product_manager_id;
+    myObject.product_line_id = params.product_line_id;
+    myObject.product_id = params.product_id;
+    myObject.product_manager_id = params.product_manager_id;
 
     const myResult = await this.tableModel.save(myObject);
 
-    console.log('result = ', myResult);
+    console.log('update result = ', myResult);
     return myResult;
   }
 
-  async delete(id: number) {
-    let myObject = await this.tableModel.findOne(id);
+  async delete(params: TadProductRel) {
+    let myObject = await this.tableModel.findOne(params.product_rel_id);
 
     const myResult = await this.tableModel.remove(myObject);
 
-    console.log('result = ', myResult);
+    console.log('delete result = ', myResult);
     return myResult;
-  }
-
-  async test() {
-
   }
 }

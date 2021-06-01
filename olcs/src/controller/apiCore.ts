@@ -23,9 +23,19 @@ import {TadProductVersionInfo} from "../entity/TadProductVersionInfo";
 import {TadDbUser} from "../entity/TadDbUser";
 import {TadTable} from "../entity/TadTable";
 import {TadTableColumn} from "../entity/TadTableColumn";
+import {TadTableIgnore} from "../entity/TadTableIgnore";
+import {TadTableIgnoreService} from "../service/core/TadTableIgnore";
+import {TadTableIndex} from "../entity/TadTableIndex";
+import {TadTableIndexService} from "../service/core/TadTableIndex";
+import {TadTablePartition} from "../entity/TadTablePartition";
+import {TadTablePartitionService} from "../service/core/TadTablePartition";
+import {TadTableRelation} from "../entity/TadTableRelation";
+import {TadTableRelationService} from "../service/core/TadTableRelation";
+import {TadTableIndexColumn} from "../entity/TadTableIndexColumn";
+import {TadTableIndexColumnService} from "../service/core/TadTableIndexColumn";
 
 @Provide()
-@Controller('/api/core')
+@Controller('/api/core', { tagName: 'Core Group', description: '系统核心业务API'})
 export class APICoreController {
   @Inject()
   ctx: Context;
@@ -66,15 +76,46 @@ export class APICoreController {
   @Inject()
   coreTadDict: TadDictService;
 
-  @Post('/get_tables')
-  async getTables(): Promise<any> {
+  @Inject()
+  coreTadTableIgnore: TadTableIgnoreService;
+
+  @Inject()
+  coreTadTableIndex: TadTableIndexService;
+
+  @Inject()
+  coreTadTablePartition: TadTablePartitionService;
+
+  @Inject()
+  coreTadTableRelation: TadTableRelationService;
+
+  @Inject()
+  coreTadTableIndexColumn: TadTableIndexColumnService;
+
+  @Post('/get_db_schemas')
+  async getDbSchemas(@Body(ALL) connInfo: TadDbConnectionInfo): Promise<any> {
     let restResult = new RestResult();
 
-    const data = await this.coreOlcBatisService.getTables();
-    restResult.data = data;
+    const result = await this.coreTadDbConnectionInfoService.getSchemas(connInfo);
+    if (result.success) {
+      restResult.data = result.data;
+    } else {
+      restResult.code = result.code;
+      restResult.success = false;
+      restResult.message = result.message;
+    }
 
     return restResult;
   }
+
+  // @Post('/get_tables')
+  // async getTables(): Promise<any> {
+  //   let restResult = new RestResult();
+  //
+  //   const data = await this.coreOlcBatisService.getTables();
+  //   restResult.data = data;
+  //
+  //   return restResult;
+  // }
 
   @Post('/get_types')
   async getTypes(): Promise<any> {
@@ -146,12 +187,22 @@ export class APICoreController {
     return restResult;
   }
 
-  @Post('/get_products')
-  async getProducts(): Promise<any> {
+  // @Post('/get_products')
+  // async getProducts(): Promise<any> {
+  //   let restResult = new RestResult();
+  //
+  //   const myResult = await this.coreOlcBatisService.getProducts();
+  //   restResult.data = myResult;
+  //
+  //   return restResult;
+  // }
+
+  @Post('/get_product_lines')
+  async getProductLines(): Promise<any> {
     let restResult = new RestResult();
 
-    const myResult = await this.coreOlcBatisService.getProducts();
-    restResult.data = myResult;
+    const data = await this.coreTadProductLineInfoService.findAll();
+    restResult.data = data;
 
     return restResult;
   }
@@ -160,7 +211,7 @@ export class APICoreController {
   async addProductLine(@Body(ALL) productLine: TadProductLineInfo): Promise<any> {
     let restResult = new RestResult();
 
-    const data = await this.coreTadProductLineInfoService.save(productLine.product_line_name, productLine.product_line_desc);
+    const data = await this.coreTadProductLineInfoService.save(productLine);
     restResult.data = data;
 
     return restResult;
@@ -170,7 +221,7 @@ export class APICoreController {
   async updateProductLine(@Body(ALL) productLine: TadProductLineInfo): Promise<any> {
     let restResult = new RestResult();
 
-    const data = await this.coreTadProductLineInfoService.update(productLine.product_line_id, productLine.product_line_name, productLine.product_line_desc);
+    const data = await this.coreTadProductLineInfoService.update(productLine);
     restResult.data = data;
 
     return restResult;
@@ -180,7 +231,17 @@ export class APICoreController {
   async deleteProductLine(@Body(ALL) productLine: TadProductLineInfo): Promise<any> {
     let restResult = new RestResult();
 
-    const data = await this.coreTadProductLineInfoService.delete(productLine.product_line_id);
+    const data = await this.coreTadProductLineInfoService.delete(productLine);
+    restResult.data = data;
+
+    return restResult;
+  }
+
+  @Post('/get_products')
+  async getProducts(): Promise<any> {
+    let restResult = new RestResult();
+
+    const data = await this.coreTadProductInfoService.findAll();
     restResult.data = data;
 
     return restResult;
@@ -190,7 +251,7 @@ export class APICoreController {
   async addProduct(@Body(ALL) product: TadProductInfo): Promise<any> {
     let restResult = new RestResult();
 
-    const data = await this.coreTadProductInfoService.save(product.product_name, product.product_desc);
+    const data = await this.coreTadProductInfoService.save(product);
     restResult.data = data;
 
     return restResult;
@@ -200,7 +261,7 @@ export class APICoreController {
   async updateProduct(@Body(ALL) product: TadProductInfo): Promise<any> {
     let restResult = new RestResult();
 
-    const data = await this.coreTadProductInfoService.update(product.product_id, product.product_name, product.product_desc);
+    const data = await this.coreTadProductInfoService.update(product);
     restResult.data = data;
 
     return restResult;
@@ -210,7 +271,17 @@ export class APICoreController {
   async deleteProduct(@Body(ALL) product: TadProductInfo): Promise<any> {
     let restResult = new RestResult();
 
-    const data = await this.coreTadProductInfoService.delete(product.product_id);
+    const data = await this.coreTadProductInfoService.delete(product);
+    restResult.data = data;
+
+    return restResult;
+  }
+
+  @Post('/get_modules')
+  async getModules(): Promise<any> {
+    let restResult = new RestResult();
+
+    const data = await this.coreTadModuleInfoService.findAll();
     restResult.data = data;
 
     return restResult;
@@ -220,7 +291,7 @@ export class APICoreController {
   async addModule(@Body(ALL) module: TadModuleInfo): Promise<any> {
     let restResult = new RestResult();
 
-    const data = await this.coreTadModuleInfoService.save(module.module_name, module.module_desc, module.module_leader);
+    const data = await this.coreTadModuleInfoService.save(module);
     restResult.data = data;
 
     return restResult;
@@ -230,7 +301,7 @@ export class APICoreController {
   async updateModule(@Body(ALL) module: TadModuleInfo): Promise<any> {
     let restResult = new RestResult();
 
-    const data = await this.coreTadModuleInfoService.update(module.module_id, module.module_name, module.module_desc, module.module_leader);
+    const data = await this.coreTadModuleInfoService.update(module);
     restResult.data = data;
 
     return restResult;
@@ -240,37 +311,57 @@ export class APICoreController {
   async deleteModule(@Body(ALL) module: TadModuleInfo): Promise<any> {
     let restResult = new RestResult();
 
-    const data = await this.coreTadModuleInfoService.delete(module.module_id);
+    const data = await this.coreTadModuleInfoService.delete(module);
     restResult.data = data;
 
     return restResult;
   }
 
-  @Post('/add_product_rel')
-  async addProductRel(@Body(ALL) productRel: TadProductRel): Promise<any> {
+  @Post('/get_product_relations')
+  async getProductRelations(): Promise<any> {
     let restResult = new RestResult();
 
-    const data = await this.coreTadProductRelService.save(productRel.product_line_id, productRel.product_id, productRel.product_manager_id);
+    const data = await this.coreTadProductRelService.findAll();
     restResult.data = data;
 
     return restResult;
   }
 
-  @Post('/update_product_rel')
-  async updateProductRel(@Body(ALL) productRel: TadProductRel): Promise<any> {
+  @Post('/add_product_relation')
+  async addProductRelation(@Body(ALL) productRel: TadProductRel): Promise<any> {
     let restResult = new RestResult();
 
-    const data = await this.coreTadProductRelService.update(productRel.product_rel_id, productRel.product_line_id, productRel.product_id, productRel.product_manager_id);
+    const data = await this.coreTadProductRelService.save(productRel);
     restResult.data = data;
 
     return restResult;
   }
 
-  @Post('/delete_product_rel')
-  async deleteProductRel(@Body(ALL) productRel: TadProductRel): Promise<any> {
+  @Post('/update_product_relation')
+  async updateProductRelation(@Body(ALL) productRel: TadProductRel): Promise<any> {
     let restResult = new RestResult();
 
-    const data = await this.coreTadProductRelService.delete(productRel.product_rel_id);
+    const data = await this.coreTadProductRelService.update(productRel);
+    restResult.data = data;
+
+    return restResult;
+  }
+
+  @Post('/delete_product_relation')
+  async deleteProductRelation(@Body(ALL) productRel: TadProductRel): Promise<any> {
+    let restResult = new RestResult();
+
+    const data = await this.coreTadProductRelService.delete(productRel);
+    restResult.data = data;
+
+    return restResult;
+  }
+
+  @Post('/get_product_managers')
+  async getProductManagers(): Promise<any> {
+    let restResult = new RestResult();
+
+    const data = await this.coreTadProductManagerInfoService.findAll();
     restResult.data = data;
 
     return restResult;
@@ -386,6 +477,16 @@ export class APICoreController {
     return restResult;
   }
 
+  @Post('/get_tables')
+  async getTables(): Promise<any> {
+    let restResult = new RestResult();
+
+    const data = await this.coreTadTable.findAll();
+    restResult.data = data;
+
+    return restResult;
+  }
+
   @Post('/add_table')
   async addTable(@Body(ALL) table: TadTable): Promise<any> {
     let restResult = new RestResult();
@@ -410,8 +511,28 @@ export class APICoreController {
   async deleteTable(@Body(ALL) table: TadTable): Promise<any> {
     let restResult = new RestResult();
 
-    const data = await this.coreTadTable.delete(table.table_id);
+    const data = await this.coreTadTable.delete(table);
     restResult.data = data;
+
+    return restResult;
+  }
+
+  @Post('/get_table_columns')
+  async getTableColumns(): Promise<any> {
+    let restResult = new RestResult();
+
+    const data = await this.coreTadTableColumn.findAll();
+    restResult.data = data;
+
+    return restResult;
+  }
+
+  @Post('/get_table_column')
+  async getTableColumn(@Body(ALL) params: TadTableColumn): Promise<any> {
+
+    let restResult = new RestResult();
+
+    restResult.data = await this.coreTadTableColumn.find(params);
 
     return restResult;
   }
@@ -440,8 +561,256 @@ export class APICoreController {
   async deleteTableColumn(@Body(ALL) column: TadTableColumn): Promise<any> {
     let restResult = new RestResult();
 
-    const data = await this.coreTadTableColumn.delete(column.column_id);
+    const data = await this.coreTadTableColumn.delete(column);
     restResult.data = data;
+
+    return restResult;
+  }
+
+  @Post('/get_table_ignores')
+  async getTableIgnores(): Promise<any> {
+    let restResult = new RestResult();
+
+    const data = await this.coreTadTableIgnore.findAll();
+    restResult.data = data;
+
+    return restResult;
+  }
+
+  @Post('/add_table_ignore')
+  async addTableIgnore(@Body(ALL) table: TadTableIgnore): Promise<any> {
+    let restResult = new RestResult();
+
+    const data = await this.coreTadTableIgnore.save(table);
+    restResult.data = data;
+
+    return restResult;
+  }
+
+  @Post('/update_table_ignore')
+  async updateTableIgnore(@Body(ALL) table: TadTableIgnore): Promise<any> {
+    let restResult = new RestResult();
+
+    const data = await this.coreTadTableIgnore.update(table);
+    restResult.data = data;
+
+    return restResult;
+  }
+
+  @Post('/delete_table_ignore')
+  async deleteTableIgnore(@Body(ALL) table: TadTableIgnore): Promise<any> {
+    let restResult = new RestResult();
+
+    const data = await this.coreTadTableIgnore.delete(table);
+    restResult.data = data;
+
+    return restResult;
+  }
+
+  // ********** ********** ********** ********** ********** ********** ********** ********** ********** **********
+
+  @Post('/get_table_indexes')
+  async getTableIndexes(): Promise<any> {
+
+    let restResult = new RestResult();
+
+    restResult.data = await this.coreTadTableIndex.findAll();
+
+    return restResult;
+  }
+
+  @Post('/get_table_index')
+  async getTableIndex(@Body(ALL) params: TadTableIndex): Promise<any> {
+
+    let restResult = new RestResult();
+
+    restResult.data = await this.coreTadTableIndex.find(params);
+
+    return restResult;
+  }
+
+  @Post('/add_table_index')
+  async addTableIndex(@Body(ALL) params: TadTableIndex): Promise<any> {
+
+    let restResult = new RestResult();
+
+    restResult.data = await this.coreTadTableIndex.save(params);
+
+    return restResult;
+  }
+
+  @Post('/update_table_index')
+  async updateTableIndex(@Body(ALL) params: TadTableIndex): Promise<any> {
+
+    let restResult = new RestResult();
+
+    restResult.data = await this.coreTadTableIndex.update(params);
+
+    return restResult;
+  }
+
+  @Post('/delete_table_index')
+  async deleteTableIndex(@Body(ALL) params: TadTableIndex): Promise<any> {
+
+    let restResult = new RestResult();
+
+    restResult.data = await this.coreTadTableIndex.delete(params);
+
+    return restResult;
+  }
+
+  // ********** ********** ********** ********** ********** ********** ********** ********** ********** **********
+
+  @Post('/get_table_indexe_columns')
+  async getTableIndexColumns(): Promise<any> {
+
+    let restResult = new RestResult();
+
+    restResult.data = await this.coreTadTableIndex.findAll();
+
+    return restResult;
+  }
+
+  @Post('/get_table_index_column')
+  async getTableIndexColumn(@Body(ALL) params: TadTableIndexColumn): Promise<any> {
+
+    let restResult = new RestResult();
+
+    restResult.data = await this.coreTadTableIndexColumn.find(params);
+
+    return restResult;
+  }
+
+  @Post('/add_table_index_column')
+  async addTableIndexColumn(@Body(ALL) params: TadTableIndexColumn): Promise<any> {
+
+    let restResult = new RestResult();
+
+    restResult.data = await this.coreTadTableIndexColumn.save(params);
+
+    return restResult;
+  }
+
+  @Post('/update_table_index_column')
+  async updateTableIndexColumn(@Body(ALL) params: TadTableIndexColumn): Promise<any> {
+
+    let restResult = new RestResult();
+
+    restResult.data = await this.coreTadTableIndexColumn.update(params);
+
+    return restResult;
+  }
+
+  @Post('/delete_table_index_column')
+  async deleteTableIndexColumn(@Body(ALL) params: TadTableIndexColumn): Promise<any> {
+
+    let restResult = new RestResult();
+
+    restResult.data = await this.coreTadTableIndexColumn.delete(params);
+
+    return restResult;
+  }
+
+  // ********** ********** ********** ********** ********** ********** ********** ********** ********** **********
+
+  @Post('/get_table_partitions')
+  async getTablePartitions(): Promise<any> {
+
+    let restResult = new RestResult();
+
+    restResult.data = await this.coreTadTablePartition.findAll();
+
+    return restResult;
+  }
+
+  @Post('/get_table_partition')
+  async getTablePartition(@Body(ALL) params: TadTablePartition): Promise<any> {
+
+    let restResult = new RestResult();
+
+    restResult.data = await this.coreTadTablePartition.find(params);
+
+    return restResult;
+  }
+
+  @Post('/add_table_partition')
+  async addTablePartition(@Body(ALL) params: TadTablePartition): Promise<any> {
+
+    let restResult = new RestResult();
+
+    restResult.data = await this.coreTadTablePartition.save(params);
+
+    return restResult;
+  }
+
+  @Post('/update_table_partition')
+  async updateTablePartition(@Body(ALL) params: TadTablePartition): Promise<any> {
+
+    let restResult = new RestResult();
+
+    restResult.data = await this.coreTadTablePartition.update(params);
+
+    return restResult;
+  }
+
+  @Post('/delete_table_partition')
+  async deleteTablePartition(@Body(ALL) params: TadTablePartition): Promise<any> {
+
+    let restResult = new RestResult();
+
+    restResult.data = await this.coreTadTablePartition.delete(params);
+
+    return restResult;
+  }
+
+  // ********** ********** ********** ********** ********** ********** ********** ********** ********** **********
+
+  @Post('/get_table_relations')
+  async getTableRelations(): Promise<any> {
+
+    let restResult = new RestResult();
+
+    restResult.data = await this.coreTadTableRelation.findAll();
+
+    return restResult;
+  }
+
+  @Post('/get_table_relation')
+  async getTableRelation(@Body(ALL) params: TadTableRelation): Promise<any> {
+
+    let restResult = new RestResult();
+
+    restResult.data = await this.coreTadTableRelation.find(params);
+
+    return restResult;
+  }
+
+  @Post('/add_table_relation')
+  async addTableRelation(@Body(ALL) params: TadTableRelation): Promise<any> {
+
+    let restResult = new RestResult();
+
+    restResult.data = await this.coreTadTableRelation.save(params);
+
+    return restResult;
+  }
+
+  @Post('/update_table_relation')
+  async updateTableRelation(@Body(ALL) params: TadTableRelation): Promise<any> {
+
+    let restResult = new RestResult();
+
+    restResult.data = await this.coreTadTableRelation.update(params);
+
+    return restResult;
+  }
+
+  @Post('/delete_table_relation')
+  async deleteTableRelation(@Body(ALL) params: TadTableRelation): Promise<any> {
+
+    let restResult = new RestResult();
+
+    restResult.data = await this.coreTadTableRelation.delete(params);
 
     return restResult;
   }

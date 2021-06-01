@@ -2,56 +2,47 @@ import {EntityModel} from "@midwayjs/orm";
 import { Column, PrimaryGeneratedColumn } from 'typeorm';
 import {CreateApiPropertyDoc} from "@midwayjs/swagger";
 
-@EntityModel('tad_table_column')
-export class TadTableColumn {
+@EntityModel('tad_table_relation')
+export class TadTableRelation {
 
   @CreateApiPropertyDoc('')
   @PrimaryGeneratedColumn()
-  column_id: number;
+  id: number;
 
   @CreateApiPropertyDoc('')
   @Column()
-  table_id: number;
+  relation_type: string;
 
   @CreateApiPropertyDoc('')
   @Column()
-  column_name: string;
+  s_db_user_id: number;
 
   @CreateApiPropertyDoc('')
   @Column()
-  column_desc: string;
+  s_table_id: number;
 
   @CreateApiPropertyDoc('')
   @Column()
-  column_type_id: number;
+  s_column_id: number;
 
   @CreateApiPropertyDoc('')
   @Column()
-  data_type: string;
+  a_db_user_id: number;
 
   @CreateApiPropertyDoc('')
   @Column()
-  data_length: number;
+  a_table_id: number;
 
   @CreateApiPropertyDoc('')
   @Column()
-  data_default: string;
+  a_column_id: number;
 
   @CreateApiPropertyDoc('')
   @Column()
-  nullable_flag: string;
+  data_flow: string;
 
   @CreateApiPropertyDoc('')
   @Column()
-  primary_flag: string;
-
-  @CreateApiPropertyDoc('')
-  @Column()
-  split_flag: string;
-
-  @CreateApiPropertyDoc('')
-  @Column()
-  repeat_flag: string;
-
+  relation_desc: string;
 }
 

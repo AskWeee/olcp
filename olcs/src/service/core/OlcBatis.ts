@@ -64,7 +64,7 @@ export class OlcBatisService {
         ", tpmi.work_addr as work_addr")
       .getRawMany();
 
-    console.log('result = ', myResult);
+    console.log('getProducts result = ', myResult);
     return myResult;
   }
 
@@ -90,6 +90,7 @@ export class OlcBatisService {
         " ttc.repeat_flag as repeat_flag")
       .getRawMany()
 
+    console.log('getTables result = ', myResult);
     return myResult;
   }
 }

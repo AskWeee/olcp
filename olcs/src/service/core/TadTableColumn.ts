@@ -11,23 +11,31 @@ export class TadTableColumnService {
   async findAll() {
     let myResult = await this.tableModel.find();
 
-    console.log("result = ", myResult);
+    console.log("findAll result = ", myResult);
     return myResult;
   }
 
-  async find(id: number) {
-    if (id === undefined || id.toString() === '') return null;
+  async find(params: TadTableColumn) {
 
-    let myResult = await this.tableModel.findOne({column_id: id});
+    console.log(params);
+    //if (params.id === undefined || params.id.toString() === '') return null;
+    if ((params.column_id) && (params.table_id)) return null
 
-    console.log("one connection from the db: ", myResult);
+    let myResult = null;
+    if (params.column_id) {
+      myResult = await this.tableModel.find({column_id: params.column_id});
+    } else if (params.table_id) {
+      myResult = await this.tableModel.find({table_id: params.table_id});
+    }
+
+    console.log("find result = ", myResult);
     return myResult;
   }
 
   async save(column: TadTableColumn) {
     const myResult = await this.tableModel.save(column);
 
-    console.log('result', myResult);
+    console.log('save result = ', myResult);
     return myResult;
   }
 
@@ -38,29 +46,34 @@ export class TadTableColumnService {
     myObject.column_name = column.column_name;
     myObject.column_desc = column.column_desc;
     myObject.column_type_id = column.column_type_id;
+    myObject.data_type = column.data_type;
     myObject.data_length = column.data_length;
-    myObject.default_value = column.default_value;
-    myObject.is_null = column.is_null;
+    myObject.data_default = column.data_default;
+    myObject.nullable_flag = column.nullable_flag;
     myObject.primary_flag = column.primary_flag;
     myObject.split_flag = column.split_flag;
     myObject.repeat_flag = column.repeat_flag;
 
     const myResult = await this.tableModel.save(myObject);
 
-    console.log('result = ', myResult);
+    console.log('update result = ', myResult);
     return myResult;
   }
 
-  async delete(id: number) {
-    let myObject = await this.tableModel.findOne(id);
+  async delete(params: TadTableColumn) {
+    //if ((params.column_id) && (params.table_id)) return null
 
+    let myObject = [];
+    if (params.column_id) {
+      myObject = await this.tableModel.find({column_id: params.column_id});
+    } else if (params.table_id) {
+      myObject = await this.tableModel.find({table_id: params.table_id});
+    }
+
+    console.log(params, myObject);
     const myResult = await this.tableModel.remove(myObject);
 
-    console.log('result = ', myResult);
+    console.log('delete result = ', myResult);
     return myResult;
-  }
-
-  async test() {
-
   }
 }

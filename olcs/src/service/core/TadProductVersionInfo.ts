@@ -11,6 +11,7 @@ export class TadProductVersionInfoService {
   async findAll() {
     let myResult = await this.tableModel.find();
 
+    console.log("findAll result = ", myResult);
     return myResult;
   }
 
@@ -18,8 +19,8 @@ export class TadProductVersionInfoService {
     if (id === undefined || id.toString() === '') return null;
 
     let myResult = await this.tableModel.findOne({version_id: id});
-    console.log("one connection from the db: ", myResult);
 
+    console.log("find result = ", myResult);
     return myResult;
   }
 
@@ -32,7 +33,7 @@ export class TadProductVersionInfoService {
 
     const myResult = await this.tableModel.save(myObject);
 
-    console.log('result = ', myResult.version_id);
+    console.log('save result = ', myResult);
     return myResult;
   }
 
@@ -45,7 +46,7 @@ export class TadProductVersionInfoService {
 
     const myResult = await this.tableModel.save(myObject);
 
-    console.log('result = ', myResult);
+    console.log('update result = ', myResult);
     return myResult;
   }
 
@@ -54,11 +55,7 @@ export class TadProductVersionInfoService {
 
     const myResult = await this.tableModel.remove(myObject);
 
-    console.log('result = ', myResult);
+    console.log('delete result = ', myResult);
     return myResult;
-  }
-
-  async test() {
-
   }
 }

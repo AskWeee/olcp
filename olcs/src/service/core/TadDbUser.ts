@@ -11,7 +11,7 @@ export class TadDbUserService {
   async findAll() {
     let myResult = await this.tableModel.find();
 
-    console.log("result = ", myResult)
+    console.log("findAll result = ", myResult)
     return myResult;
   }
 
@@ -20,7 +20,7 @@ export class TadDbUserService {
 
     let myResult = await this.tableModel.findOne({user_id: id});
 
-    console.log("one connection from the db: ", myResult);
+    console.log("find result = ", myResult);
     return myResult;
   }
 
@@ -33,7 +33,7 @@ export class TadDbUserService {
 
     const myResult = await this.tableModel.save(myObject);
 
-    console.log('result = ', myResult.user_id);
+    console.log('save result = ', myResult);
     return myResult;
   }
 
@@ -46,7 +46,7 @@ export class TadDbUserService {
 
     const myResult = await this.tableModel.save(myObject);
 
-    console.log('result = ', myResult);
+    console.log('update result = ', myResult);
     return myResult;
   }
 
@@ -55,11 +55,7 @@ export class TadDbUserService {
 
     const myResult = await this.tableModel.remove(myObject);
 
-    console.log('result = ', myResult);
+    console.log('delete result = ', myResult);
     return myResult;
-  }
-
-  async test() {
-
   }
 }

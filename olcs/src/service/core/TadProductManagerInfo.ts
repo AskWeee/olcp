@@ -10,15 +10,17 @@ export class TadProductManagerInfoService {
 
   async findAll() {
     let myResult = await this.tableModel.find();
-    console.log("All connections from the db: ", myResult)
+
+    console.log("findAll result = ", myResult)
+    return myResult;
   }
 
   async find(id: number) {
     if (id === undefined || id.toString() === '') return null;
 
     let myResult = await this.tableModel.findOne({product_manager_id: id});
-    console.log("one connection from the db: ", myResult);
 
+    console.log("find result = ", myResult);
     return myResult;
   }
 
@@ -31,8 +33,8 @@ export class TadProductManagerInfoService {
     myObject.work_addr = work_addr;
 
     const myResult = await this.tableModel.save(myObject);
-
-    console.log('my object id = ', myResult.product_manager_id);
+    console.log('save result = ', myResult);
+    return myResult;
   }
 
   async update(id: number, name: string, tel_no: string, email_addr: string, work_addr: string) {
@@ -45,7 +47,7 @@ export class TadProductManagerInfoService {
 
     const myResult = await this.tableModel.save(myObject);
 
-    console.log('result = ', myResult);
+    console.log('update result = ', myResult);
     return myResult;
   }
 
@@ -54,11 +56,7 @@ export class TadProductManagerInfoService {
 
     const myResult = await this.tableModel.remove(myObject);
 
-    console.log('result = ', myResult);
+    console.log('delete result = ', myResult);
     return myResult;
-  }
-
-  async test() {
-
   }
 }

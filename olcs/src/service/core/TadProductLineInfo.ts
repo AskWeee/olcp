@@ -10,7 +10,9 @@ export class TadProductLineInfoService {
 
   async findAll() {
     let myResult = await this.tableModel.find();
-    console.log("result = ", myResult)
+
+    console.log("findAll result = ", myResult)
+    return myResult;
   }
 
   async find(id: number) {
@@ -18,43 +20,39 @@ export class TadProductLineInfoService {
 
     let myResult = await this.tableModel.findOne({product_line_id: id});
 
-    console.log("result = ", myResult);
+    console.log("find result = ", myResult);
     return myResult;
   }
 
-  async save(name: string, desc: string) {
+  async save(params: TadProductLineInfo) {
     let myObject = new TadProductLineInfo();
-    myObject.product_line_name = name;
-    myObject.product_line_desc = desc;
+    myObject.product_line_name = params.product_line_name;
+    myObject.product_line_desc = params.product_line_desc;
 
     const myResult = await this.tableModel.save(myObject);
 
-    console.log('result = ', myResult);
+    console.log('save result = ', myResult);
     return myResult;
   }
 
-  async update(id: number, name: string, desc: string) {
-    let myObject = await this.tableModel.findOne(id);
+  async update(params: TadProductLineInfo) {
+    let myObject = await this.tableModel.findOne(params.product_line_id);
 
-    myObject.product_line_name = name;
-    myObject.product_line_desc = desc;
+    myObject.product_line_name = params.product_line_name;
+    myObject.product_line_desc = params.product_line_desc;
 
     const myResult = await this.tableModel.save(myObject);
 
-    console.log('result = ', myResult);
+    console.log('update result = ', myResult);
     return myResult;
   }
 
-  async delete(id: number) {
-    let myObject = await this.tableModel.findOne(id);
+  async delete(params: TadProductLineInfo) {
+    let myObject = await this.tableModel.findOne(params.product_line_id);
 
     const myResult = await this.tableModel.remove(myObject);
 
-    console.log('result = ', myResult);
+    console.log('delete result = ', myResult);
     return myResult;
-  }
-
-  async test() {
-
   }
 }

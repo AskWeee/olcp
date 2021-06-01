@@ -11,6 +11,7 @@ export class TadDictService {
   async findAll() {
     let myResult = await this.tableModel.find();
 
+    console.log("findAll result = ", myResult);
     return myResult;
   }
 
@@ -19,6 +20,7 @@ export class TadDictService {
 
     let myResult = await this.tableModel.findOne({id: id});
 
+    console.log("find result = ", myResult);
     return myResult;
   }
 
@@ -30,7 +32,7 @@ export class TadDictService {
 
     const myResult = await this.tableModel.save(myObject);
 
-    console.log('result', myResult);
+    console.log('save result', myResult);
     return myResult;
   }
 
@@ -43,7 +45,7 @@ export class TadDictService {
 
     const myResult = await this.tableModel.save(myObject);
 
-    console.log('result = ', myResult);
+    console.log('update result = ', myResult);
     return myResult;
   }
 
@@ -52,11 +54,7 @@ export class TadDictService {
 
     const myResult = await this.tableModel.remove(myObject);
 
-    console.log('result = ', myResult);
+    console.log('delete result = ', myResult);
     return myResult;
-  }
-
-  async test() {
-
   }
 }

@@ -1,0 +1,74 @@
+    onButtonInClicked() {
+        console.log(this.gCurrent);
+        console.log(this.gTableUnknownSelected);
+
+        for (let i = 0; i < this.gTableUnknownSelected.length; i++) {
+            let tableName = this.gTableUnknownSelected[i].title;
+
+            axios.post("http://" + this.context.serviceIp + ":" + this.context.servicePort + "/api/core/add_table",
+                {},
+                {headers: {'Content-Type': 'application/json'}}
+            ).then((response) => {
+                let data = response.data;
+                if (data.code === 200) {
+                }
+            });
+
+            for (let j = 0; j < this.gTableUnknownSelected[i].children.length; j++) {
+                let tableColumnName = this.gTableUnknownSelected[i].children[j].title;
+                axios.post("http://" + this.context.serviceIp + ":" + this.context.servicePort + "/api/core/add_table_cloumn",
+                    {},
+                    {headers: {'Content-Type': 'application/json'}}
+                ).then((response) => {
+                    let data = response.data;
+                    if (data.code === 200) {
+                    }
+                });
+            }
+
+            let timerPointer = setInterval(() => {
+                for (let value of this.gMapFlags.get(pKey).values()) {
+                    if (value.type === "table" && value.value) {
+                        clearTimeout(timerPointer);
+                        this.gMapFlagTimers.get(pKey).pointer = 1;
+                        break
+                    }
+                }
+            }, 100);
+
+            this.gMapFlagTimers.set(pKey, {
+                pointer: timerPointer
+            });
+        }
+
+        let tp = setInterval(() => {
+            let isAllDone = true;
+            for (let v of this.gMapFlagTimers.values()) {
+                if (v.pointer !== 1) {
+                    isAllDone = false;
+                    break
+                }
+            }
+            if (isAllDone) {
+                clearTimeout(tp);
+
+                for (let i = 0; i < this.gTableUnknownSelected.length; i++) {
+                    this.gTablesKnown.push(this.gTableUnknownSelected[i]);
+
+                    for (let j = this.gTablesUnknown.length - 1; j >= 0; j--) {
+                        if (this.gTablesUnknown[j].title === this.gTableUnknownSelected[i].title) {
+                            this.gTablesUnknown.splice(j, 1);
+                            break
+                        }
+                    }
+                }
+
+                let tablesKnown = JSON.parse(JSON.stringify(this.gTablesKnown));
+                let tablesUnknown = JSON.parse(JSON.stringify(this.gTablesUnknown));
+                this.setState({
+                    tablesKnown: tablesKnown,
+                    tablesUnknown: tablesUnknown
+                })
+            }
+        })
+    }

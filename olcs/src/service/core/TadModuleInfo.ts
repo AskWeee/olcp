@@ -10,52 +10,54 @@ export class TadModuleInfoService {
 
   async findAll() {
     let myResult = await this.tableModel.find();
-    console.log("All connections from the db: ", myResult)
+
+    console.log("findAll result = ", myResult);
+    return myResult;
   }
 
   async find(id: number) {
     if (id === undefined || id.toString() === '') return null;
 
     let myResult = await this.tableModel.findOne({module_id: id});
-    console.log("one connection from the db: ", myResult);
 
+    console.log("find result = ", myResult);
     return myResult;
   }
 
-  async save(name: string, desc: string, leader: string) {
+  async save(params: TadModuleInfo) {
     let myObject = new TadModuleInfo();
-    myObject.module_name = name;
-    myObject.module_desc = desc;
-    myObject.module_leader = leader;
+
+    myObject.product_id = params.product_id;
+    myObject.module_name = params.module_name;
+    myObject.module_desc = params.module_desc;
+    myObject.module_leader = params.module_leader;
 
     const myResult = await this.tableModel.save(myObject);
 
-    console.log('result = ', myResult);
+    console.log('save result = ', myResult);
     return myResult;
   }
 
-  async update(id: number, name: string, desc: string, leader: string) {
-    let myObject = await this.tableModel.findOne(id);
-    myObject.module_name = name;
-    myObject.module_desc = desc;
-    myObject.module_leader = leader;
+  async update(params: TadModuleInfo) {
+    let myObject = await this.tableModel.findOne(params.module_id);
+
+    myObject.product_id = params.product_id;
+    myObject.module_name = params.module_name;
+    myObject.module_desc = params.module_desc;
+    myObject.module_leader = params.module_leader;
 
     const myResult = await this.tableModel.save(myObject);
 
-    console.log('result = ', myResult);
+    console.log('update result = ', myResult);
     return myResult;
   }
 
-  async delete(id: number) {
-    let myObject = await this.tableModel.findOne(id);
+  async delete(params: TadModuleInfo) {
+    let myObject = await this.tableModel.findOne(params.module_id);
 
     const myResult = await this.tableModel.remove(myObject);
 
-    console.log('result = ', myResult);
+    console.log('delete result = ', myResult);
     return myResult;
-  }
-
-  async test() {
-
   }
 }

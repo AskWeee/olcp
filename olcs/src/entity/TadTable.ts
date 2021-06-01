@@ -48,5 +48,13 @@ export class TadTable {
   @CreateApiPropertyDoc('')
   @Column()
   modify_time: string;
+
+  @CreateApiPropertyDoc('')
+  @Column()
+  partition_type: string;
+
+  @CreateApiPropertyDoc('')
+  @Column()
+  partition_column: string;
 }
 
