@@ -661,7 +661,7 @@ export class APICoreController {
 
   // ********** ********** ********** ********** ********** ********** ********** ********** ********** **********
 
-  @Post('/get_table_indexe_columns')
+  @Post('/get_table_index_columns')
   async getTableIndexColumns(): Promise<any> {
 
     let restResult = new RestResult();
