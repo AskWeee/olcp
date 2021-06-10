@@ -344,6 +344,115 @@ from ALL_PART_TABLES;
      */
   }
 
+  async getKpis(connInfo: TadDbConnectionInfo) {
+
+    let myResultTables;
+    let myDb;
+    let myPool;
+    let myDbType = connInfo.db_type.toLowerCase();
+
+    if (myDbType === "mysql") {
+      myDb = require("mysql");
+    } else if (myDbType === 'oracle') {
+      myDb = require("oracledb");
+    }
+
+    myPool = await myDb.createPool({
+      host: connInfo.db_host,
+      port: connInfo.db_port,
+      user: connInfo.db_username,
+      password: connInfo.db_password,
+      database: connInfo.db_sid,
+      connectString: connInfo.db_host + ":" + connInfo.db_port + "/" + connInfo.db_sid
+    });
+
+    let myGetSchemas = function () {
+      let getResult = new RestResult();
+
+      return new Promise((resolve, reject) => {
+        myPool.getConnection(function (err, connection) {
+          if (err) {
+            console.log(err);
+            getResult.code = err.code;
+            getResult.success = false;
+            getResult.message = err.errno;
+            resolve(getResult)
+          } else {
+            let strSql = "select" +
+              " ks.SCHEMA_ID as schema_id," +
+              " ks.SCHEMA_NS as schema_ns," +
+              " ks.SCHEMA_ZHNAME as schema_zhname," +
+              " ks.SCHEMA_ENNAME as schema_enname," +
+              " ks.COUNTER_TAB_NAME as counter_tab_name," +
+              " ks.TAB_NAME as tab_name," +
+              " ks.VENDOR_ID as vendor_id," +
+              " ks.OBJECT_CLASS as object_class," +
+              " ks.SUB_CLASS as sub_class," +
+              " ks.INTERVAL_FLAG as interval_flag," +
+              " k.KPI_ID as kpi_id," +
+              " k.KPI_ZHNAME as kpi_zhname," +
+              " k.KPI_ENNAME as kpi_enname," +
+              " k.KPI_FIELD as kpi_field," +
+              " k.KPI_EXP as kpi_exp," +
+              " k.KPI_ALARM as kpi_alarm," +
+              " k.KPI_FORMAT as kpi_format," +
+              " k.KPI_MIN_VALUE as kpi_min_value," +
+              " k.KPI_MAX_VALUE as kpi_max_value" +
+              " from TAI_RTKPISCHEMA ks" +
+              " left join TAI_RTKPIS k on ks.SCHEMA_ID = k.SCHEMA_ID" +
+              " order by ks.schema_zhname, k.kpi_id";
+            console.log(strSql);
+            if (myDbType === 'mysql') {
+              connection.query(strSql, function (errQuery, results) {
+                if (errQuery) {
+                  getResult.code = errQuery.code;
+                  getResult.success = false;
+                  getResult.message = errQuery.errno;
+                  resolve(getResult);
+                }
+                let metaData = [{name: "TABLE_NAME"}, {name: "COLUMN_NAME"}, {name: "DATA_TYPE"}, {name: "DATA_LENGTH"}];
+                let rows = [];
+                for (let i = 0; i < results.length; i++) {
+                  let row = [];
+                  row.push(results[i].table_name);
+                  row.push(results[i].column_name);
+                  row.push(results[i].data_type);
+                  row.push(results[i].data_length);
+                  rows.push(row);
+                }
+                getResult.data = {metaData: metaData, rows: rows};
+                resolve(getResult);
+                connection.release();
+              });
+
+            } else if (myDbType === 'oracle') {
+              connection.execute(strSql, function (errQuery, results) {
+                if (errQuery) {
+                  getResult.code = errQuery.code;
+                  getResult.success = false;
+                  getResult.message = errQuery.errno;
+                  resolve(getResult);
+                }
+                getResult.data = results;
+                resolve(getResult);
+                connection.release();
+              });
+            }
+          }
+        });
+      });
+    }
+
+    myResultTables = await myGetSchemas();
+
+    let myResult = new RestResult();
+    myResult.data.push(myResultTables);
+
+    console.log("getSchemas result = ", myResult);
+    return myResult;
+
+  }
+
   async test(connInfo: TadDbConnectionInfo) {
     let myResult;
     let myDb;
