@@ -11,7 +11,6 @@ export class TadIndicatorCounterService {
 
   async findAll() {
     let restResult = new RestResult();
-
     let myResult = await this.tableModel.find();
 
     restResult.success = true;

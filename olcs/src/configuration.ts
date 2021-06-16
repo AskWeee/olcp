@@ -25,7 +25,7 @@ export class ContainerLifeCycle implements ILifeCycle {
 
   async onReady(container: IMidwayContainer): Promise<void> {
     //this.app.connection = "hello world";
-    let message = "this.dbCore.connectionString";
+    let message = "say Hi to the world with MidWay by K.";
     console.log(message);
     // this.dbCore = "dbCore.connect"; // .connect();
 

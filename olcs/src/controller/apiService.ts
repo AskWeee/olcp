@@ -12,6 +12,7 @@ import {TadRtKpi} from "../entity/TadRtKpi";
 import {TadRtKpiCounterService} from "../service/core/TadRtKpiCounter";
 import {TadIndicatorCounterService} from "../service/core/TadIndicatorCounter";
 import {TadIndicatorCounter} from "../entity/TadIndicatorCounter";
+import {TadKpiDictService} from "../service/core/TadKpiDict";
 
 @Provide()
 @Controller('/api/service', { tagName: 'Service Group', description: '系统服务管理相关API'})
@@ -36,6 +37,9 @@ export class APIServiceController {
 
   @Inject()
   tadKpiCounterService: TadRtKpiCounterService;
+
+  @Inject()
+  tadKpiDictService: TadKpiDictService;
 
   @Post('/get_kpis_oracle')
   async getKpisOracle(@Body(ALL) connInfo: TadDbConnectionInfo): Promise<any> {
@@ -148,6 +152,22 @@ export class APIServiceController {
     let restResult = new RestResult();
 
     restResult.data = await this.tadIndicatorCounterService.save(params);
+
+    return restResult;
+  }
+
+  @Post('/get_kpi_dict')
+  async getKpiDict(): Promise<any> {
+    let restResult = new RestResult();
+    let result = await this.tadKpiDictService.findAll();
+
+    if (result.success) {
+      restResult.data = result.data;
+    } else {
+      restResult.code = result.code;
+      restResult.success = false;
+      restResult.message = result.message;
+    }
 
     return restResult;
   }

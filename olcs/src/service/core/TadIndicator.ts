@@ -11,10 +11,7 @@ export class TadIndicatorService {
 
   async findAll() {
     let restResult = new RestResult();
-
     let myResult = await this.tableModel.find();
-
-    console.log("findAll result = ", myResult);
 
     restResult.success = true;
     restResult.data = myResult;
