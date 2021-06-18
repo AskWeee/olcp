@@ -7,7 +7,11 @@ export class TadRtKpiSchema {
 
   @CreateApiPropertyDoc('')
   @PrimaryGeneratedColumn()
-  schema_id: number;
+  id: number;
+
+  @CreateApiPropertyDoc('')
+  @Column()
+  schema_id: string;
 
   @CreateApiPropertyDoc('')
   @Column()

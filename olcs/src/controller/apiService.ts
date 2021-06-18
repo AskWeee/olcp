@@ -89,6 +89,39 @@ export class APIServiceController {
     return restResult;
   }
 
+  @Post('/add_kpi_schema')
+  async addKpiSchema(@Body(ALL) params: TadRtKpiSchema): Promise<any> {
+    let restResult = new RestResult();
+
+    let data = await this.tadKpiSchemaService.save(params);
+    restResult.data = data;
+
+    console.log(restResult);
+    return restResult;
+  }
+
+  @Post('/update_kpi_schema')
+  async updateKpiSchema(@Body(ALL) params: TadRtKpiSchema): Promise<any> {
+    let restResult = new RestResult();
+
+    let data = await this.tadKpiSchemaService.update(params);
+    restResult.data = data;
+
+    console.log(restResult);
+    return restResult;
+  }
+
+  @Post('/delete_kpi_schema')
+  async deleteKpiSchema(@Body(ALL) params: TadRtKpiSchema): Promise<any> {
+    let restResult = new RestResult();
+
+    let data = await this.tadKpiSchemaService.delete(params);
+    restResult.data = data;
+
+    console.log(restResult);
+    return restResult;
+  }
+
   @Post('/get_kpis')
   async getKpis(@Body(ALL) connInfo: TadRtKpi): Promise<any> {
     let restResult = new RestResult();
@@ -101,6 +134,29 @@ export class APIServiceController {
       restResult.success = false;
       restResult.message = result.message;
     }
+
+    return restResult;
+  }
+
+  @Post('/add_kpi')
+  async addKpi(@Body(ALL) params: TadRtKpi): Promise<any> {
+    let restResult = new RestResult();
+
+    let data = await this.tadKpiService.save(params);
+    restResult.data = data;
+
+    console.log(restResult);
+    return restResult;
+  }
+
+
+  @Post('/update_kpi')
+  async updateKpi(@Body(ALL) params: TadRtKpi): Promise<any> {
+    let restResult = new RestResult();
+
+    const result = await this.tadKpiService.update(params);
+
+    restResult.data = result;
 
     return restResult;
   }
