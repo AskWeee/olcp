@@ -11,15 +11,11 @@ export class TadRtKpi {
 
   @CreateApiPropertyDoc('')
   @Column()
-  schema_id: number;
-
-  // @CreateApiPropertyDoc('')
-  // @Column()
-  // schema_id2: number;
+  sid: number;
 
   @CreateApiPropertyDoc('')
   @Column()
-  kpi_id: number;
+  kpi_id: string;
 
   @CreateApiPropertyDoc('')
   @Column()
@@ -43,11 +39,11 @@ export class TadRtKpi {
 
   @CreateApiPropertyDoc('')
   @Column()
-  kpi_min_value: number;
+  kpi_min_value: string;
 
   @CreateApiPropertyDoc('')
   @Column()
-  kpi_max_value: number;
+  kpi_max_value: string;
 
   @CreateApiPropertyDoc('')
   @Column()

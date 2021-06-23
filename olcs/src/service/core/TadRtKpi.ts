@@ -1,7 +1,6 @@
 import { Provide} from '@midwayjs/decorator';
 import { InjectEntityModel } from '@midwayjs/orm';
 import { Repository } from 'typeorm';
-import {RestResult} from "../../controller/RestResult";
 import {TadRtKpi} from "../../entity/TadRtKpi";
 
 @Provide()
@@ -10,67 +9,51 @@ export class TadRtKpiService {
   tableModel: Repository<TadRtKpi>;
 
   async findAll() {
-    let restResult = new RestResult();
-
-    let myResult = await this.tableModel.find();
-
-    restResult.success = true;
-    restResult.data = myResult;
-    restResult.message = "success";
-
-    return restResult;
+    return await this.tableModel.find();
   }
 
   async find(params: TadRtKpi) {
-    if ((params.kpi_id) && (params.schema_id)) return null
+    let myResult;
 
-    let myResult = null;
-    if (params.kpi_id) {
-       myResult = await this.tableModel.find({kpi_id: params.kpi_id});
-    } else if (params.schema_id) {
-      myResult = await this.tableModel.find({schema_id: params.schema_id});
+    if (params.id) {
+       myResult = await this.tableModel.find({id: params.id});
+    } else if (params.sid) {
+      myResult = await this.tableModel.find({sid: params.sid});
     }
 
     return myResult;
   }
 
   async save(params: TadRtKpi) {
-
-    const myResult = await this.tableModel.save(params);
-
-    return myResult;
+    return await this.tableModel.save(params);
   }
 
   async update(params: TadRtKpi) {
-
     let myObject = await this.tableModel.findOne(params.id);
 
-    myObject.schema_id = params.schema_id;
-    // myObject = params;
-    // myObject = params;
-    // myObject = params;
-    // myObject = params;
-    // myObject = params;
-    // myObject = params;
+    myObject.kpi_id = params.kpi_id;
+    myObject.kpi_field = params.kpi_field;
+    myObject.kpi_zhname = params.kpi_zhname;
+    myObject.kpi_enname = params.kpi_enname;
+    myObject.kpi_alarm = params.kpi_alarm;
+    myObject.kpi_format = params.kpi_format;
+    myObject.kpi_min_value = params.kpi_min_value;
+    myObject.kpi_max_value = params.kpi_max_value;
+    myObject.kpi_exp = params.kpi_exp;
+    myObject.used_info = params.used_info;
 
-    const myResult = await this.tableModel.save(myObject);
-
-    return myResult;
+    return await this.tableModel.save(myObject);
   }
 
   async delete(params: TadRtKpi) {
+    let myObject;
 
-    //if ((params.id) && (params.table_id)) return null
-
-    let myObject = [];
-    if (params.kpi_id) {
-      myObject = await this.tableModel.find({kpi_id: params.kpi_id});
-    } else if (params.schema_id) {
-      myObject = await this.tableModel.find({schema_id: params.schema_id});
+    if (params.id) {
+      myObject = await this.tableModel.find({id: params.id});
+    } else if (params.sid) {
+      myObject = await this.tableModel.find({sid: params.sid});
     }
 
-    const myResult = await this.tableModel.remove(myObject);
-
-    return myResult;
+    return await this.tableModel.remove(myObject);
   }
 }
