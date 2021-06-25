@@ -2,7 +2,7 @@ import {Provide} from '@midwayjs/decorator';
 import {InjectEntityModel} from '@midwayjs/orm';
 import {Repository} from 'typeorm';
 import {RestResult} from "../../controller/RestResult";
-import {TadKpiDict} from "../../entity/TadKpiDict";
+import {TadKpiDict} from "../../entity/service/TadKpiDict";
 
 @Provide()
 export class TadKpiDictService {

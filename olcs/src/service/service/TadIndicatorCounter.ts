@@ -1,13 +1,13 @@
 import { Provide} from '@midwayjs/decorator';
 import { InjectEntityModel } from '@midwayjs/orm';
 import { Repository } from 'typeorm';
-import {TadIndicator} from "../../entity/TadIndicator";
 import {RestResult} from "../../controller/RestResult";
+import {TadIndicatorCounter} from "../../entity/service/TadIndicatorCounter";
 
 @Provide()
-export class TadIndicatorService {
-  @InjectEntityModel(TadIndicator)
-  tableModel: Repository<TadIndicator>;
+export class TadIndicatorCounterService {
+  @InjectEntityModel(TadIndicatorCounter)
+  tableModel: Repository<TadIndicatorCounter>;
 
   async findAll() {
     let restResult = new RestResult();
@@ -20,7 +20,7 @@ export class TadIndicatorService {
     return restResult;
   }
 
-  async find(params: TadIndicator) {
+  async find(params: TadIndicatorCounter) {
     let myResult = null;
 
     if (params.id) {
@@ -30,13 +30,13 @@ export class TadIndicatorService {
     return myResult;
   }
 
-  async save(params: TadIndicator) {
+  async save(params: TadIndicatorCounter) {
     const myResult = await this.tableModel.save(params);
 
     return myResult;
   }
 
-  async update(params: TadIndicator) {
+  async update(params: TadIndicatorCounter) {
     let myObject = await this.tableModel.findOne(params.id);
 
     // myObject.indicator_code = params.indicator_code;
@@ -71,11 +71,13 @@ export class TadIndicatorService {
     return myResult;
   }
 
-  async delete(params: TadIndicator) {
+  async delete(params: TadIndicatorCounter) {
     let myObject = [];
 
     if (params.id) {
       myObject = await this.tableModel.find({id: params.id});
+    } else if (params.indicator_id) {
+      myObject = await this.tableModel.find({indicator_id: params.indicator_id});
     }
 
     const myResult = await this.tableModel.remove(myObject);

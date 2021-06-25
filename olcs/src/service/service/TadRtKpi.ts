@@ -1,7 +1,7 @@
 import { Provide} from '@midwayjs/decorator';
 import { InjectEntityModel } from '@midwayjs/orm';
 import { Repository } from 'typeorm';
-import {TadRtKpi} from "../../entity/TadRtKpi";
+import {TadRtKpi} from "../../entity/service/TadRtKpi";
 
 @Provide()
 export class TadRtKpiService {

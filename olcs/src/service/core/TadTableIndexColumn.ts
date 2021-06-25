@@ -1,7 +1,7 @@
 import { Provide} from '@midwayjs/decorator';
 import { InjectEntityModel } from '@midwayjs/orm';
 import { Repository } from 'typeorm';
-import {TadTableIndexColumn} from "../../entity/TadTableIndexColumn";
+import {TadTableIndexColumn} from "../../entity/core/TadTableIndexColumn";
 
 @Provide()
 export class TadTableIndexColumnService {

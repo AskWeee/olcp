@@ -1,18 +1,19 @@
-import {Inject, Controller, Post, Provide, ALL, Body} from '@midwayjs/decorator';
+import {ALL, Body, Controller, Inject, Post, Provide} from '@midwayjs/decorator';
 import {Context} from 'egg';
+import {TadDbConnectionInfo} from "../entity/core/TadDbConnectionInfo";
 import {TadDbConnectionInfoService} from "../service/core/TadDbConnectionInfo";
-import {TadDbConnectionInfo} from "../entity/TadDbConnectionInfo";
 import {RestResult} from "./RestResult";
-import {TadIndicator} from "../entity/TadIndicator";
-import {TadIndicatorService} from "../service/core/TadIndicator";
-import {TadRtKpiService} from "../service/core/TadRtKpi";
-import {TadRtKpiSchemaService} from "../service/core/TadRtKpiSchema";
-import {TadRtKpiSchema} from "../entity/TadRtKpiSchema";
-import {TadRtKpi} from "../entity/TadRtKpi";
-import {TadRtKpiCounterService} from "../service/core/TadRtKpiCounter";
-import {TadIndicatorCounterService} from "../service/core/TadIndicatorCounter";
-import {TadIndicatorCounter} from "../entity/TadIndicatorCounter";
-import {TadKpiDictService} from "../service/core/TadKpiDict";
+import {TadIndicator} from "../entity/service/TadIndicator";
+import {TadIndicatorService} from "../service/service/TadIndicator";
+import {TadRtKpiSchema} from "../entity/service/TadRtKpiSchema";
+import {TadRtKpiSchemaService} from "../service/service/TadRtKpiSchema";
+import {TadRtKpi} from "../entity/service/TadRtKpi";
+import {TadRtKpiService} from "../service/service/TadRtKpi";
+import {TadRtKpiCounter} from "../entity/service/TadRtKpiCounter";
+import {TadRtKpiCounterService} from "../service/service/TadRtKpiCounter";
+import {TadIndicatorCounter} from "../entity/service/TadIndicatorCounter";
+import {TadIndicatorCounterService} from "../service/service/TadIndicatorCounter";
+import {TadKpiDictService} from "../service/service/TadKpiDict";
 
 @Provide()
 @Controller('/api/service', { tagName: 'Service Group', description: '系统服务管理相关API'})
@@ -61,14 +62,34 @@ export class APIServiceController {
   async getKpiCounters(): Promise<any> {
     let restResult = new RestResult();
 
-    const result = await this.tadKpiCounterService.findAll();
-    if (result.success) {
-      restResult.data = result.data;
-    } else {
-      restResult.code = result.code;
-      restResult.success = false;
-      restResult.message = result.message;
-    }
+    restResult.data = await this.tadKpiCounterService.findAll();
+
+    return restResult;
+  }
+
+  @Post('/delete_kpi_counter')
+  async deleteKpiCounter(@Body(ALL) params: TadRtKpiCounter): Promise<any> {
+    let restResult = new RestResult();
+
+    restResult.data = await this.tadKpiCounterService.delete(params);
+
+    return restResult;
+  }
+
+  @Post('/fix_kpi_counter')
+  async fixKpiCounter(@Body(ALL) params: TadRtKpiCounter): Promise<any> {
+    let restResult = new RestResult();
+
+    restResult.data = await this.tadKpiCounterService.fix(params);
+
+    return restResult;
+  }
+
+  @Post('/add_kpi_counter')
+  async addKpiCounter(@Body(ALL) params: TadRtKpiCounter): Promise<any> {
+    let restResult = new RestResult();
+
+    restResult.data = await this.tadKpiCounterService.save(params);
 
     return restResult;
   }
@@ -95,7 +116,6 @@ export class APIServiceController {
 
     restResult.data = await this.tadKpiSchemaService.save(params);
 
-    console.log(restResult);
     return restResult;
   }
 
@@ -105,7 +125,6 @@ export class APIServiceController {
 
     restResult.data = await this.tadKpiSchemaService.update(params);
 
-    console.log(restResult);
     return restResult;
   }
 
@@ -115,7 +134,6 @@ export class APIServiceController {
 
     restResult.data = await this.tadKpiSchemaService.delete(params);
 
-    console.log(restResult);
     return restResult;
   }
 

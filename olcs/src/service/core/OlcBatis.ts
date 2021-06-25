@@ -1,14 +1,14 @@
 import {Provide} from "@midwayjs/decorator";
 import {InjectEntityModel} from "@midwayjs/orm";
 import {Repository} from "typeorm";
-import {TadProductRel} from "../../entity/TadProductRel";
-import {TadProductLineInfo} from "../../entity/TadProductLineInfo";
-import {TadProductInfo} from "../../entity/TadProductInfo";
-import {TadProductManagerInfo} from "../../entity/TadProductManagerInfo";
-import {TadModuleInfo} from "../../entity/TadModuleInfo";
-import {TadDbUser} from "../../entity/TadDbUser";
-import {TadTable} from "../../entity/TadTable";
-import {TadTableColumn} from "../../entity/TadTableColumn";
+import {TadProductRel} from "../../entity/core/TadProductRel";
+import {TadProductLineInfo} from "../../entity/core/TadProductLineInfo";
+import {TadProductInfo} from "../../entity/core/TadProductInfo";
+import {TadProductManagerInfo} from "../../entity/core/TadProductManagerInfo";
+import {TadModuleInfo} from "../../entity/core/TadModuleInfo";
+import {TadDbUser} from "../../entity/core/TadDbUser";
+import {TadTable} from "../../entity/core/TadTable";
+import {TadTableColumn} from "../../entity/core/TadTableColumn";
 
 @Provide()
 export class OlcBatisService {

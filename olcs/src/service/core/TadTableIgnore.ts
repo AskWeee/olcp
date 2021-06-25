@@ -1,7 +1,7 @@
 import { Provide} from '@midwayjs/decorator';
 import { InjectEntityModel } from '@midwayjs/orm';
 import { Repository } from 'typeorm';
-import {TadTableIgnore} from "../../entity/TadTableIgnore";
+import {TadTableIgnore} from "../../entity/core/TadTableIgnore";
 
 @Provide()
 export class TadTableIgnoreService {

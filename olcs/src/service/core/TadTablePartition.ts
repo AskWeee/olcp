@@ -1,7 +1,7 @@
 import { Provide} from '@midwayjs/decorator';
 import { InjectEntityModel } from '@midwayjs/orm';
 import { Repository } from 'typeorm';
-import {TadTablePartition} from "../../entity/TadTablePartition";
+import {TadTablePartition} from "../../entity/core/TadTablePartition";
 
 @Provide()
 export class TadTablePartitionService {

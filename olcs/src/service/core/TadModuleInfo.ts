@@ -1,7 +1,7 @@
 import { Provide} from '@midwayjs/decorator';
 import { InjectEntityModel } from '@midwayjs/orm';
 import { Repository } from 'typeorm';
-import {TadModuleInfo} from "../../entity/TadModuleInfo";
+import {TadModuleInfo} from "../../entity/core/TadModuleInfo";
 
 @Provide()
 export class TadModuleInfoService {

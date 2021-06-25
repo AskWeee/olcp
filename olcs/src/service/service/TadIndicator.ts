@@ -1,17 +1,16 @@
-import {Provide} from '@midwayjs/decorator';
-import {InjectEntityModel} from '@midwayjs/orm';
-import {Repository} from 'typeorm';
+import { Provide} from '@midwayjs/decorator';
+import { InjectEntityModel } from '@midwayjs/orm';
+import { Repository } from 'typeorm';
+import {TadIndicator} from "../../entity/service/TadIndicator";
 import {RestResult} from "../../controller/RestResult";
-import {TadRtKpiCounter} from "../../entity/TadRtKpiCounter";
 
 @Provide()
-export class TadRtKpiCounterService {
-  @InjectEntityModel(TadRtKpiCounter)
-  tableModel: Repository<TadRtKpiCounter>;
+export class TadIndicatorService {
+  @InjectEntityModel(TadIndicator)
+  tableModel: Repository<TadIndicator>;
 
   async findAll() {
     let restResult = new RestResult();
-
     let myResult = await this.tableModel.find();
 
     restResult.success = true;
@@ -21,22 +20,24 @@ export class TadRtKpiCounterService {
     return restResult;
   }
 
-  async find(params: TadRtKpiCounter) {
-    let myResult = await this.tableModel.find({schema_id: params.schema_id});
+  async find(params: TadIndicator) {
+    let myResult = null;
+
+    if (params.id) {
+       myResult = await this.tableModel.find({id: params.id});
+    }
 
     return myResult;
   }
 
-  async save(params: TadRtKpiCounter) {
-
+  async save(params: TadIndicator) {
     const myResult = await this.tableModel.save(params);
 
     return myResult;
   }
 
-  async update(params: TadRtKpiCounter) {
-
-    let myObject = await this.tableModel.findOne(params.schema_id);
+  async update(params: TadIndicator) {
+    let myObject = await this.tableModel.findOne(params.id);
 
     // myObject.indicator_code = params.indicator_code;
     // myObject.indicator_name = params.indicator_name;
@@ -70,9 +71,12 @@ export class TadRtKpiCounterService {
     return myResult;
   }
 
-  async delete(params: TadRtKpiCounter) {
+  async delete(params: TadIndicator) {
     let myObject = [];
-    myObject = await this.tableModel.find({schema_id: params.schema_id, counter_enname: params.counter_enname});
+
+    if (params.id) {
+      myObject = await this.tableModel.find({id: params.id});
+    }
 
     const myResult = await this.tableModel.remove(myObject);
 

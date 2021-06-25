@@ -1,6 +1,6 @@
 import {Provide} from '@midwayjs/decorator';
 import {InjectEntityModel} from '@midwayjs/orm';
-import {TadDbConnectionInfo} from '../../entity/TadDbConnectionInfo';
+import {TadDbConnectionInfo} from '../../entity/core/TadDbConnectionInfo';
 import {Repository} from 'typeorm';
 import {RestResult} from "../../controller/RestResult";
 

@@ -7,7 +7,15 @@ export class TadRtKpiCounter {
 
   @CreateApiPropertyDoc('')
   @PrimaryColumn()
-  schema_id: number;
+  id: number;
+
+  @CreateApiPropertyDoc('')
+  @Column()
+  sid: number;
+
+  @CreateApiPropertyDoc('')
+  @Column()
+  counter_zhname: string;
 
   @CreateApiPropertyDoc('')
   @PrimaryColumn()
@@ -15,10 +23,10 @@ export class TadRtKpiCounter {
 
   @CreateApiPropertyDoc('')
   @Column()
-  counter_zhname: string;
+  counter_field: string;
 
   @CreateApiPropertyDoc('')
   @Column()
-  counter_field: string;
+  schema_id2: string;
 }
 
