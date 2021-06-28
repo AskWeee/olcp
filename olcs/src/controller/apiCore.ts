@@ -241,8 +241,7 @@ export class APICoreController {
   async getProducts(): Promise<any> {
     let restResult = new RestResult();
 
-    const data = await this.coreTadProductInfoService.findAll();
-    restResult.data = data;
+    restResult.data = await this.coreTadProductInfoService.findAll();
 
     return restResult;
   }
@@ -281,8 +280,7 @@ export class APICoreController {
   async getModules(): Promise<any> {
     let restResult = new RestResult();
 
-    const data = await this.coreTadModuleInfoService.findAll();
-    restResult.data = data;
+    restResult.data = await this.coreTadModuleInfoService.findAll();
 
     return restResult;
   }

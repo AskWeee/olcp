@@ -14,6 +14,8 @@ import {TadRtKpiCounterService} from "../service/service/TadRtKpiCounter";
 import {TadIndicatorCounter} from "../entity/service/TadIndicatorCounter";
 import {TadIndicatorCounterService} from "../service/service/TadIndicatorCounter";
 import {TadKpiDictService} from "../service/service/TadKpiDict";
+import {TadNetworkTypeDefineService} from "../service/service/TadNetworkTypeDefine";
+import {TadVendorNameService} from "../service/service/TadVendorName";
 
 @Provide()
 @Controller('/api/service', { tagName: 'Service Group', description: '系统服务管理相关API'})
@@ -42,6 +44,12 @@ export class APIServiceController {
   @Inject()
   tadKpiDictService: TadKpiDictService;
 
+  @Inject()
+  tadNetworkTypeDefineService: TadNetworkTypeDefineService;
+
+  @Inject()
+  tadVendorNameService: TadVendorNameService;
+
   @Post('/get_kpis_oracle')
   async getKpisOracle(@Body(ALL) connInfo: TadDbConnectionInfo): Promise<any> {
     let restResult = new RestResult();
@@ -57,6 +65,34 @@ export class APIServiceController {
 
     return restResult;
   }
+
+  @Post('/get_kpi_dict')
+  async getKpiDict(): Promise<any> {
+    let restResult = new RestResult();
+
+    restResult.data = await this.tadKpiDictService.findAll();
+
+    return restResult;
+  }
+
+  @Post('/get_object_defs')
+  async getObjectDefs(): Promise<any> {
+    let restResult = new RestResult();
+
+    restResult.data = await this.tadNetworkTypeDefineService.findAll();
+
+    return restResult;
+  }
+
+  @Post('/get_vendors')
+  async getVendors(): Promise<any> {
+    let restResult = new RestResult();
+
+    restResult.data = await this.tadVendorNameService.findAll();
+
+    return restResult;
+  }
+
 
   @Post('/get_kpi_counters')
   async getKpiCounters(): Promise<any> {
@@ -219,22 +255,6 @@ export class APIServiceController {
     let restResult = new RestResult();
 
     restResult.data = await this.tadIndicatorCounterService.save(params);
-
-    return restResult;
-  }
-
-  @Post('/get_kpi_dict')
-  async getKpiDict(): Promise<any> {
-    let restResult = new RestResult();
-    let result = await this.tadKpiDictService.findAll();
-
-    if (result.success) {
-      restResult.data = result.data;
-    } else {
-      restResult.code = result.code;
-      restResult.success = false;
-      restResult.message = result.message;
-    }
 
     return restResult;
   }
