@@ -210,17 +210,10 @@ export class APIServiceController {
   }
 
   @Post('/get_indicators')
-  async getIndicators(@Body(ALL) indicator: TadIndicator): Promise<any> {
+  async getIndicators(): Promise<any> {
     let restResult = new RestResult();
 
-    const result = await this.tadIndicatorService.findAll();
-    if (result.success) {
-      restResult.data = result.data;
-    } else {
-      restResult.code = result.code;
-      restResult.success = false;
-      restResult.message = result.message;
-    }
+    restResult.data = await this.tadIndicatorService.findAll();
 
     return restResult;
   }

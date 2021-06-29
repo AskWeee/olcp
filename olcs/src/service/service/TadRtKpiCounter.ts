@@ -42,6 +42,13 @@ export class TadRtKpiCounterService {
       myObject = await this.tableModel.find({sid: params.sid});
     }
 
-    return await this.tableModel.remove(myObject);
+    let data = await this.tableModel.remove(myObject);
+    if (params.id) {
+      data.forEach((item) => {
+        item.id = params.id
+      })
+    }
+    console.log(data);
+    return data;
   }
 }

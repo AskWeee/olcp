@@ -1,12 +1,12 @@
 import {EntityModel} from "@midwayjs/orm";
-import { Column, PrimaryColumn} from 'typeorm';
+import {Column, PrimaryColumn, PrimaryGeneratedColumn} from 'typeorm';
 import {CreateApiPropertyDoc} from "@midwayjs/swagger";
 
 @EntityModel('tad_rtkpicounter')
 export class TadRtKpiCounter {
 
   @CreateApiPropertyDoc('')
-  @PrimaryColumn()
+  @PrimaryGeneratedColumn()
   id: number;
 
   @CreateApiPropertyDoc('')

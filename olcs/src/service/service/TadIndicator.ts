@@ -2,7 +2,6 @@ import { Provide} from '@midwayjs/decorator';
 import { InjectEntityModel } from '@midwayjs/orm';
 import { Repository } from 'typeorm';
 import {TadIndicator} from "../../entity/service/TadIndicator";
-import {RestResult} from "../../controller/RestResult";
 
 @Provide()
 export class TadIndicatorService {
@@ -10,14 +9,11 @@ export class TadIndicatorService {
   tableModel: Repository<TadIndicator>;
 
   async findAll() {
-    let restResult = new RestResult();
-    let myResult = await this.tableModel.find();
-
-    restResult.success = true;
-    restResult.data = myResult;
-    restResult.message = "success";
-
-    return restResult;
+    return await this.tableModel.find({
+      order: {
+        indicator_zhname: "ASC",
+      }
+    });
   }
 
   async find(params: TadIndicator) {
