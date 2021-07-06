@@ -31,16 +31,16 @@ export class TadRtKpiService {
   async update(params: TadRtKpi) {
     let myObject = await this.tableModel.findOne(params.id);
 
-    myObject.kpi_id = params.kpi_id;
-    myObject.kpi_field = params.kpi_field;
-    myObject.kpi_zhname = params.kpi_zhname;
-    myObject.kpi_enname = params.kpi_enname;
-    myObject.kpi_alarm = params.kpi_alarm;
-    myObject.kpi_format = params.kpi_format;
-    myObject.kpi_min_value = params.kpi_min_value;
-    myObject.kpi_max_value = params.kpi_max_value;
-    myObject.kpi_exp = params.kpi_exp;
-    myObject.used_info = params.used_info;
+    if (params.kpi_id !== null) myObject.kpi_id = params.kpi_id;
+    if (params.kpi_field !== null) myObject.kpi_field = params.kpi_field;
+    if (params.kpi_zhname !== null) myObject.kpi_zhname = params.kpi_zhname;
+    if (params.kpi_enname !== null) myObject.kpi_enname = params.kpi_enname;
+    if (params.kpi_alarm !== null) myObject.kpi_alarm = params.kpi_alarm;
+    if (params.kpi_format !== null) myObject.kpi_format = params.kpi_format;
+    if (params.kpi_min_value !== null) myObject.kpi_min_value = params.kpi_min_value;
+    if (params.kpi_max_value !== null) myObject.kpi_max_value = params.kpi_max_value;
+    if (params.kpi_exp !== null) myObject.kpi_exp = params.kpi_exp;
+    if (params.used_info !== null) myObject.used_info = params.used_info;
 
     return await this.tableModel.save(myObject);
   }
