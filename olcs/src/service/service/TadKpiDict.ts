@@ -8,7 +8,12 @@ export class TadKpiDictService {
   @InjectEntityModel(TadKpiDict)
   tableModel: Repository<TadKpiDict>;
 
+  //todo 排序
   async findAll() {
-    return await this.tableModel.find();
+    return await this.tableModel.find({
+      order: {
+        type_name: "ASC",
+      }
+    });
   }
 }

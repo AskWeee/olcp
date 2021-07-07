@@ -134,14 +134,7 @@ export class APIServiceController {
   async getKpiSchemas(@Body(ALL) connInfo: TadRtKpiSchema): Promise<any> {
     let restResult = new RestResult();
 
-    const result = await this.tadKpiSchemaService.findAll();
-    if (result.success) {
-      restResult.data = result.data;
-    } else {
-      restResult.code = result.code;
-      restResult.success = false;
-      restResult.message = result.message;
-    }
+    restResult.data = await this.tadKpiSchemaService.findAll();
 
     return restResult;
   }
