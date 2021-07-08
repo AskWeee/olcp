@@ -2,7 +2,7 @@ import { Provide} from '@midwayjs/decorator';
 import { InjectEntityModel } from '@midwayjs/orm';
 import { Repository, Between } from 'typeorm';
 import {TadKpiOlog} from "../../entity/service/TadKpiOlog";
-import {TimePairs} from "../../params/TimePairs";
+import {KpiOlogParams} from "../../params/KpiOlogParams";
 
 @Provide()
 export class TadKpiOlogService {
@@ -17,7 +17,7 @@ export class TadKpiOlogService {
     });
   }
 
-  async find(params: TimePairs) {
+  async find(params: KpiOlogParams) {
     let myResult;
 
     if (params.tb && params.te) {
@@ -38,7 +38,7 @@ export class TadKpiOlogService {
     return await this.tableModel.save(params);
   }
 
-  async delete(params: TimePairs) {
+  async delete(params: KpiOlogParams) {
     let myObject;
 
     if (params.tb && params.te) {

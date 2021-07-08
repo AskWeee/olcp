@@ -16,6 +16,8 @@ import {TadIndicatorCounterService} from "../service/service/TadIndicatorCounter
 import {TadKpiDictService} from "../service/service/TadKpiDict";
 import {TadNetworkTypeDefineService} from "../service/service/TadNetworkTypeDefine";
 import {TadVendorNameService} from "../service/service/TadVendorName";
+import {TadKpiOlogService} from "../service/service/TadKpiOlog";
+import {KpiOlogParams} from "../params/KpiOlogParams";
 
 @Provide()
 @Controller('/api/service', { tagName: 'Service Group', description: '系统服务管理相关API'})
@@ -49,6 +51,18 @@ export class APIServiceController {
 
   @Inject()
   tadVendorNameService: TadVendorNameService;
+
+  @Inject()
+  tadKpiOlogService: TadKpiOlogService;
+
+  @Post('/get_kpi_ologs')
+  async getKpiOlogs(@Body(ALL) params: KpiOlogParams): Promise<any> {
+    let restResult = new RestResult();
+
+    restResult.data = await this.tadKpiOlogService.find(params);
+
+    return restResult;
+  }
 
   @Post('/get_kpis_oracle')
   async getKpisOracle(@Body(ALL) connInfo: TadDbConnectionInfo): Promise<any> {
