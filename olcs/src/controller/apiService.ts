@@ -18,6 +18,10 @@ import {TadNetworkTypeDefineService} from "../service/service/TadNetworkTypeDefi
 import {TadVendorNameService} from "../service/service/TadVendorName";
 import {TadKpiOlogService} from "../service/service/TadKpiOlog";
 import {KpiOlogParams} from "../params/KpiOlogParams";
+import {TadCommTreeService} from "../service/service/TadCommTree";
+import {TadProjectKpiService} from "../service/service/TadProjectKpi";
+import {TadProjectKpi} from "../entity/service/TadProjectKpi";
+import {TadCommTree} from "../entity/service/TadCommTree";
 
 @Provide()
 @Controller('/api/service', { tagName: 'Service Group', description: '系统服务管理相关API'})
@@ -54,6 +58,67 @@ export class APIServiceController {
 
   @Inject()
   tadKpiOlogService: TadKpiOlogService;
+
+  @Inject()
+  tadCommTreeService: TadCommTreeService;
+
+  @Post('/get_comm_trees')
+  async getCommTrees(): Promise<any> {
+    let restResult = new RestResult();
+
+    restResult.data = await this.tadCommTreeService.findAll();
+
+    return restResult;
+  }
+
+  @Post('/add_comm_tree')
+  async addCommTree(@Body(ALL) params: TadCommTree): Promise<any> {
+    let restResult = new RestResult();
+
+    restResult.data = await this.tadCommTreeService.save(params);
+
+    return restResult;
+  }
+
+  @Post('/update_comm_tree')
+  async updateCommTree(@Body(ALL) params: TadCommTree): Promise<any> {
+    let restResult = new RestResult();
+
+    restResult.data = await this.tadCommTreeService.update(params);
+
+    return restResult;
+  }
+
+  @Post('/delete_comm_tree')
+  async deleteCommTree(@Body(ALL) params: TadCommTree): Promise<any> {
+    let restResult = new RestResult();
+
+    restResult.data = await this.tadCommTreeService.delete(params);
+
+    return restResult;
+  }
+
+  @Inject()
+  tadProjectKpiService: TadProjectKpiService;
+
+  @Post('/get_project_kpis')
+  async getProjectKpis(): Promise<any> {
+    let restResult = new RestResult();
+
+    restResult.data = await this.tadProjectKpiService.findAll();
+
+    return restResult;
+  }
+
+  @Post('/add_project_kpi')
+  async addProjectKpi(@Body(ALL) params: TadProjectKpi): Promise<any> {
+    let restResult = new RestResult();
+
+    restResult.data = await this.tadProjectKpiService.save(params);
+
+    return restResult;
+  }
+
 
   @Post('/get_kpi_ologs')
   async getKpiOlogs(@Body(ALL) params: KpiOlogParams): Promise<any> {
