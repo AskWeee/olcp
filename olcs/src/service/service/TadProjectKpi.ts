@@ -24,6 +24,26 @@ export class TadProjectKpiService {
     return await this.tableModel.save(params);
   }
 
+  async update(params: TadProjectKpi) {
+    let myObject;
+
+    if (params.id) {
+      myObject = await this.tableModel.findOne({
+        id: params.id
+      });
+
+      if (params.kpi_ui_title !== null) {
+        if (params.kpi_ui_title.trim() === "") {
+          myObject.kpi_ui_title = null;
+        } else {
+          myObject.kpi_ui_title = params.kpi_ui_title;
+        }
+      }
+
+      return await this.tableModel.save(myObject);
+    }
+  }
+
   async delete(params: TadProjectKpi) {
     let myObject;
 

@@ -16,5 +16,9 @@ export class TadProjectKpi {
   @CreateApiPropertyDoc('')
   @Column()
   kid: number;
+
+  @CreateApiPropertyDoc('')
+  @Column()
+  kpi_ui_title: string;
 }
 

@@ -119,6 +119,23 @@ export class APIServiceController {
     return restResult;
   }
 
+  @Post('/update_project_kpi')
+  async updateProjectKpi(@Body(ALL) params: TadProjectKpi): Promise<any> {
+    let restResult = new RestResult();
+
+    restResult.data = await this.tadProjectKpiService.update(params);
+
+    return restResult;
+  }
+
+  @Post('/delete_project_kpi')
+  async deleteProjectKpi(@Body(ALL) params: TadProjectKpi): Promise<any> {
+    let restResult = new RestResult();
+
+    restResult.data = await this.tadProjectKpiService.delete(params);
+
+    return restResult;
+  }
 
   @Post('/get_kpi_ologs')
   async getKpiOlogs(@Body(ALL) params: KpiOlogParams): Promise<any> {
