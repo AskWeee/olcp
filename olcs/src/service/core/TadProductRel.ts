@@ -9,10 +9,7 @@ export class TadProductRelService {
   tableModel: Repository<TadProductRel>;
 
   async findAll() {
-    let myResult = await this.tableModel.find();
-
-    console.log("findAll result = ", myResult)
-    return myResult;
+    return await this.tableModel.find();
   }
 
   async find(id: number) {

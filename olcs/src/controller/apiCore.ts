@@ -218,12 +218,12 @@ export class APICoreController {
   }
 
   @Post('/update_product_line')
-  async updateProductLine(@Body(ALL) productLine: TadProductLineInfo): Promise<any> {
+  async updateProductLine(@Body(ALL) params: TadProductLineInfo): Promise<any> {
     let restResult = new RestResult();
 
-    const data = await this.coreTadProductLineInfoService.update(productLine);
-    restResult.data = data;
+    restResult.data = await this.coreTadProductLineInfoService.update(params);
 
+    console.log(params, restResult.data);
     return restResult;
   }
 
@@ -439,38 +439,34 @@ export class APICoreController {
   async getDbUsers(): Promise<any> {
     let restResult = new RestResult();
 
-    const data = await this.coreTadDbUserService.findAll();
-    restResult.data = data;
+    restResult.data = await this.coreTadDbUserService.findAll();
 
     return restResult;
   }
 
   @Post('/add_db_user')
-  async addDbUser(@Body(ALL) dbUser: TadDbUser): Promise<any> {
+  async addDbUser(@Body(ALL) params: TadDbUser): Promise<any> {
     let restResult = new RestResult();
 
-    const data = await this.coreTadDbUserService.save(dbUser.user_name, dbUser.user_desc, dbUser.product_line_id);
-    restResult.data = data;
+    restResult.data = await this.coreTadDbUserService.save(params);
 
     return restResult;
   }
 
   @Post('/update_db_user')
-  async updateDbUser(@Body(ALL) dbUser: TadDbUser): Promise<any> {
+  async updateDbUser(@Body(ALL) params: TadDbUser): Promise<any> {
     let restResult = new RestResult();
 
-    const data = await this.coreTadDbUserService.update(dbUser.user_id, dbUser.user_name, dbUser.user_desc, dbUser.product_line_id);
-    restResult.data = data;
+    restResult.data = await this.coreTadDbUserService.update(params);
 
     return restResult;
   }
 
   @Post('/delete_db_user')
-  async deleteDbUser(@Body(ALL) dbUser: TadDbUser): Promise<any> {
+  async deleteDbUser(@Body(ALL) params: TadDbUser): Promise<any> {
     let restResult = new RestResult();
 
-    const data = await this.coreTadDbUserService.delete(dbUser.user_id);
-    restResult.data = data;
+    restResult.data = await this.coreTadDbUserService.delete(params);
 
     return restResult;
   }

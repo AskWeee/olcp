@@ -17,7 +17,6 @@ export class TadProductInfoService {
 
     let myResult = await this.tableModel.findOne({product_id: id});
 
-    console.log("find result = ", myResult);
     return myResult;
   }
 

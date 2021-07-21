@@ -9,53 +9,32 @@ export class TadDbUserService {
   tableModel: Repository<TadDbUser>;
 
   async findAll() {
-    let myResult = await this.tableModel.find();
-
-    console.log("findAll result = ", myResult)
-    return myResult;
+    return await this.tableModel.find();
   }
 
-  async find(id: number) {
-    if (id === undefined || id.toString() === '') return null;
+  async find(params: TadDbUser) {
+    if (params.user_id === null) return null;
 
-    let myResult = await this.tableModel.findOne({user_id: id});
-
-    console.log("find result = ", myResult);
-    return myResult;
+    return await this.tableModel.findOne({user_id: params.user_id});
   }
 
-  async save(name: string, desc: string, product_line_id: number) {
-    let myObject = new TadDbUser();
-
-    myObject.user_name = name;
-    myObject.user_desc = desc;
-    myObject.product_line_id = product_line_id;
-
-    const myResult = await this.tableModel.save(myObject);
-
-    console.log('save result = ', myResult);
-    return myResult;
+  async save(params: TadDbUser) {
+    return await this.tableModel.save(params);
   }
 
-  async update(id: number, name: string, desc: string, product_line_id: number) {
-    let myObject = await this.tableModel.findOne(id);
+  async update(params: TadDbUser) {
+    let myObject = await this.tableModel.findOne(params.user_id);
 
-    myObject.user_name = name;
-    myObject.user_desc = desc;
-    myObject.product_line_id = product_line_id;
+    if (params.user_name !== null) myObject.user_name = params.user_name;
+    if (params.user_desc !== null) myObject.user_desc = params.user_desc;
+    if (params.product_line_id !== null) myObject.product_line_id = params.product_line_id;
 
-    const myResult = await this.tableModel.save(myObject);
-
-    console.log('update result = ', myResult);
-    return myResult;
+    return await this.tableModel.save(myObject);
   }
 
-  async delete(id: number) {
-    let myObject = await this.tableModel.findOne(id);
+  async delete(params: TadDbUser) {
+    let myObject = await this.tableModel.findOne(params.user_id);
 
-    const myResult = await this.tableModel.remove(myObject);
-
-    console.log('delete result = ', myResult);
-    return myResult;
+    return await this.tableModel.remove(myObject);
   }
 }

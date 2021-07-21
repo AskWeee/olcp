@@ -9,10 +9,7 @@ export class TadProductLineInfoService {
   tableModel: Repository<TadProductLineInfo>;
 
   async findAll() {
-    let myResult = await this.tableModel.find();
-
-    console.log("findAll result = ", myResult)
-    return myResult;
+    return await this.tableModel.find();
   }
 
   async find(id: number) {
@@ -20,39 +17,25 @@ export class TadProductLineInfoService {
 
     let myResult = await this.tableModel.findOne({product_line_id: id});
 
-    console.log("find result = ", myResult);
     return myResult;
   }
 
   async save(params: TadProductLineInfo) {
-    let myObject = new TadProductLineInfo();
-    myObject.product_line_name = params.product_line_name;
-    myObject.product_line_desc = params.product_line_desc;
-
-    const myResult = await this.tableModel.save(myObject);
-
-    console.log('save result = ', myResult);
-    return myResult;
+    return await this.tableModel.save(params);
   }
 
   async update(params: TadProductLineInfo) {
     let myObject = await this.tableModel.findOne(params.product_line_id);
 
-    myObject.product_line_name = params.product_line_name;
-    myObject.product_line_desc = params.product_line_desc;
+    if (params.product_line_name !== null) myObject.product_line_name = params.product_line_name;
+    if (params.product_line_desc !== null) myObject.product_line_desc = params.product_line_desc;
 
-    const myResult = await this.tableModel.save(myObject);
-
-    console.log('update result = ', myResult);
-    return myResult;
+    return await this.tableModel.save(myObject);
   }
 
   async delete(params: TadProductLineInfo) {
     let myObject = await this.tableModel.findOne(params.product_line_id);
 
-    const myResult = await this.tableModel.remove(myObject);
-
-    console.log('delete result = ', myResult);
-    return myResult;
+    return await this.tableModel.remove(myObject);
   }
 }

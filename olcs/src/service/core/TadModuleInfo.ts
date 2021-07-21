@@ -17,7 +17,6 @@ export class TadModuleInfoService {
 
     let myResult = await this.tableModel.findOne({module_id: id});
 
-    console.log("find result = ", myResult);
     return myResult;
   }
 
