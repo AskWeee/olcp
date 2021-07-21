@@ -15,6 +15,10 @@ export class TadTableIndexColumn {
 
   @CreateApiPropertyDoc('')
   @Column()
+  index_id: number;
+
+  @CreateApiPropertyDoc('')
+  @Column()
   index_name: string;
 
   @CreateApiPropertyDoc('')

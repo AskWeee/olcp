@@ -9,69 +9,40 @@ export class TadTableService {
   tableModel: Repository<TadTable>;
 
   async findAll() {
-    let myResult = await this.tableModel.find();
-
-    console.log("findAll result = ", myResult);
-    return myResult;
+    return await this.tableModel.find();
   }
 
-  async find(id: number) {
-    if (id === undefined || id.toString() === '') return null;
-
-    let myResult = await this.tableModel.findOne({table_id: id});
-
-    console.log("find result = ", myResult);
-    return myResult;
+  async find(params: TadTable) {
+    return await this.tableModel.findOne({table_id: params.table_id});
   }
 
-  async save(table: TadTable) {
-
-    const myResult = await this.tableModel.save(table);
-
-    console.log('save result = ', myResult);
-    return myResult;
+  async save(params: TadTable) {
+    return await this.tableModel.save(params);
   }
 
-  async update(table: TadTable) {
-    let myObject = await this.tableModel.findOne(table.table_id);
+  async update(params: TadTable) {
+    let myObject = await this.tableModel.findOne(params.table_id);
 
-    myObject.table_name = table.table_name;
-    myObject.table_desc = table.table_desc;
-    myObject.table_type_id = table.table_type_id;
-    myObject.table_label_id = table.table_label_id;
-    myObject.db_user_id = table.db_user_id;
-    myObject.module_id = table.module_id;
-    myObject.create_user_id = table.create_user_id;
-    myObject.create_time = table.create_time;
-    myObject.modify_user_id = table.modify_user_id;
-    myObject.modify_time = table.modify_time;
-    myObject.partition_type = table.partition_type;
-    myObject.partition_column = table.partition_column;
+    if (params.table_name !== null) myObject.table_name = params.table_name;
+    if (params.table_desc !== null) myObject.table_desc = params.table_desc;
+    if (params.table_type_id !== null) myObject.table_type_id = params.table_type_id;
+    if (params.table_label_id !== null) myObject.table_label_id = params.table_label_id;
+    if (params.db_user_id !== null) myObject.db_user_id = params.db_user_id;
+    if (params.module_id !== null) myObject.module_id = params.module_id;
+    if (params.create_user_id !== null) myObject.create_user_id = params.create_user_id;
+    if (params.create_time !== null) myObject.create_time = params.create_time;
+    if (params.modify_user_id !== null) myObject.modify_user_id = params.modify_user_id;
+    if (params.modify_time !== null) myObject.modify_time = params.modify_time;
+    if (params.partition_type !== null) myObject.partition_type = params.partition_type;
+    if (params.partition_column !== null) myObject.partition_column = params.partition_column;
 
-    const myResult = await this.tableModel.save(myObject);
-
-    console.log('update result = ', myResult);
-    return myResult;
+    return await this.tableModel.save(myObject);
   }
 
   async delete(params: TadTable) {
-    console.log(params);
-    // if (!params.table_id) return []
+    let myObject = await this.tableModel.findOne({table_id: params.table_id});
 
-    let myObject = [];
-    if (params.table_id) {
-      myObject = await this.tableModel.find({table_id: params.table_id});
-    }
-
-    console.log(params, myObject);
-    const myResult = await this.tableModel.remove(myObject);
-
-    console.log('delete result = ', myResult);
-    return myResult;
-    // let myResult = null;
-    //
-    // let myObject = await this.tableModel.findOne(id);
-    //
+    //todo >>>>> delete columns
     // if (myObject !== undefined) {
     //   await this.tableModel.remove(myObject);
     //
@@ -81,8 +52,7 @@ export class TadTableService {
     //     .where("table_id = :tid", {tid: id})
     //     .execute();
     // }
-    //
-    // console.log('delete result = ', myResult);
-    // return myResult;
+
+    return await this.tableModel.remove(myObject);
   }
 }

@@ -475,38 +475,34 @@ export class APICoreController {
   async getTables(): Promise<any> {
     let restResult = new RestResult();
 
-    const data = await this.coreTadTable.findAll();
-    restResult.data = data;
+    restResult.data = await this.coreTadTable.findAll();
 
     return restResult;
   }
 
   @Post('/add_table')
-  async addTable(@Body(ALL) table: TadTable): Promise<any> {
+  async addTable(@Body(ALL) params: TadTable): Promise<any> {
     let restResult = new RestResult();
 
-    const data = await this.coreTadTable.save(table);
-    restResult.data = data;
+    restResult.data = await this.coreTadTable.save(params);
 
     return restResult;
   }
 
   @Post('/update_table')
-  async updateTable(@Body(ALL) table: TadTable): Promise<any> {
+  async updateTable(@Body(ALL) params: TadTable): Promise<any> {
     let restResult = new RestResult();
 
-    const data = await this.coreTadTable.update(table);
-    restResult.data = data;
+    restResult.data = await this.coreTadTable.update(params);
 
     return restResult;
   }
 
   @Post('/delete_table')
-  async deleteTable(@Body(ALL) table: TadTable): Promise<any> {
+  async deleteTable(@Body(ALL) params: TadTable): Promise<any> {
     let restResult = new RestResult();
 
-    const data = await this.coreTadTable.delete(table);
-    restResult.data = data;
+    restResult.data = await this.coreTadTable.delete(params);
 
     return restResult;
   }
