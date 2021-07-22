@@ -33,6 +33,8 @@ import {TadTableRelation} from "../entity/core/TadTableRelation";
 import {TadTableRelationService} from "../service/core/TadTableRelation";
 import {TadTableIndexColumn} from "../entity/core/TadTableIndexColumn";
 import {TadTableIndexColumnService} from "../service/core/TadTableIndexColumn";
+import {TadOlcEvent} from "../entity/core/TadOlcEvent";
+import {TadOlcEventService} from "../service/core/TadOlcEvent";
 
 @Provide()
 @Controller('/api/core', { tagName: 'Core Group', description: '系统核心业务API'})
@@ -90,6 +92,45 @@ export class APICoreController {
 
   @Inject()
   coreTadTableIndexColumn: TadTableIndexColumnService;
+
+  @Inject()
+  coreTadOlcEvent: TadOlcEventService;
+
+  @Post('/get_olc_events')
+  async getOlcEvents(): Promise<any> {
+    let restResult = new RestResult();
+
+    restResult.data = await this.coreTadOlcEvent.findAll();
+
+    return restResult;
+  }
+
+  @Post('/add_olc_event')
+  async addOlcEvent(@Body(ALL) params: TadOlcEvent): Promise<any> {
+    let restResult = new RestResult();
+
+    restResult.data = await this.coreTadOlcEvent.save(params);
+
+    return restResult;
+  }
+
+  @Post('/update_olc_event')
+  async updateOlcEvent(@Body(ALL) params: TadOlcEvent): Promise<any> {
+    let restResult = new RestResult();
+
+    restResult.data = await this.coreTadOlcEvent.update(params);
+
+    return restResult;
+  }
+
+  @Post('/delete_olc_event')
+  async deleteOlcEvent(@Body(ALL) params: TadOlcEvent): Promise<any> {
+    let restResult = new RestResult();
+
+    restResult.data = await this.coreTadOlcEvent.delete(params);
+
+    return restResult;
+  }
 
   @Post('/get_db_schemas')
   async getDbSchemas(@Body(ALL) connInfo: TadDbConnectionInfo): Promise<any> {
