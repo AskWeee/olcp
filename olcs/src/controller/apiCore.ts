@@ -291,8 +291,7 @@ export class APICoreController {
   async addProduct(@Body(ALL) product: TadProductInfo): Promise<any> {
     let restResult = new RestResult();
 
-    const data = await this.coreTadProductInfoService.save(product);
-    restResult.data = data;
+    restResult.data = await this.coreTadProductInfoService.save(product);
 
     return restResult;
   }
@@ -301,8 +300,7 @@ export class APICoreController {
   async updateProduct(@Body(ALL) product: TadProductInfo): Promise<any> {
     let restResult = new RestResult();
 
-    const data = await this.coreTadProductInfoService.update(product);
-    restResult.data = data;
+    restResult.data = await this.coreTadProductInfoService.update(product);
 
     return restResult;
   }
@@ -311,8 +309,7 @@ export class APICoreController {
   async deleteProduct(@Body(ALL) product: TadProductInfo): Promise<any> {
     let restResult = new RestResult();
 
-    const data = await this.coreTadProductInfoService.delete(product);
-    restResult.data = data;
+    restResult.data = await this.coreTadProductInfoService.delete(product);
 
     return restResult;
   }
@@ -330,8 +327,7 @@ export class APICoreController {
   async addModule(@Body(ALL) module: TadModuleInfo): Promise<any> {
     let restResult = new RestResult();
 
-    const data = await this.coreTadModuleInfoService.save(module);
-    restResult.data = data;
+    restResult.data = await this.coreTadModuleInfoService.save(module);
 
     return restResult;
   }
@@ -340,8 +336,7 @@ export class APICoreController {
   async updateModule(@Body(ALL) module: TadModuleInfo): Promise<any> {
     let restResult = new RestResult();
 
-    const data = await this.coreTadModuleInfoService.update(module);
-    restResult.data = data;
+    restResult.data = await this.coreTadModuleInfoService.update(module);
 
     return restResult;
   }
@@ -350,8 +345,7 @@ export class APICoreController {
   async deleteModule(@Body(ALL) module: TadModuleInfo): Promise<any> {
     let restResult = new RestResult();
 
-    const data = await this.coreTadModuleInfoService.delete(module);
-    restResult.data = data;
+    restResult.data = await this.coreTadModuleInfoService.delete(module);
 
     return restResult;
   }

@@ -12,43 +12,22 @@ export class TadProductInfoService {
     return await this.tableModel.find();
   }
 
-  async find(id: number) {
-    if (id === undefined || id.toString() === '') return null;
-
-    let myResult = await this.tableModel.findOne({product_id: id});
-
-    return myResult;
-  }
-
   async save(params: TadProductInfo) {
-    let myObject = new TadProductInfo();
-    myObject.product_name = params.product_name;
-    myObject.product_desc = params.product_desc;
-
-    const myResult = await this.tableModel.save(myObject);
-
-    console.log('save result = ', myResult);
-    return myResult;
+    return await this.tableModel.save(params);
   }
 
   async update(params: TadProductInfo) {
     let myObject = await this.tableModel.findOne(params.product_id);
 
-    myObject.product_name = params.product_name;
-    myObject.product_desc = params.product_desc;
+    if (params.product_name !== null) myObject.product_name = params.product_name;
+    if (params.product_desc !== null) myObject.product_desc = params.product_desc;
 
-    const myResult = await this.tableModel.save(myObject);
-
-    console.log('update result = ', myResult);
-    return myResult;
+    return await this.tableModel.save(myObject);
   }
 
   async delete(params: TadProductInfo) {
     let myObject = await this.tableModel.findOne(params.product_id);
 
-    const myResult = await this.tableModel.remove(myObject);
-
-    console.log('delete result = ', myResult);
-    return myResult;
+    return await this.tableModel.remove(myObject);
   }
 }
