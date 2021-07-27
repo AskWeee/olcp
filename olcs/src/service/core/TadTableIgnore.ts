@@ -9,10 +9,7 @@ export class TadTableIgnoreService {
   tableModel: Repository<TadTableIgnore>;
 
   async findAll() {
-    let myResult = await this.tableModel.find();
-
-    console.log("findAll result = ", myResult);
-    return myResult;
+    return await this.tableModel.find();
   }
 
   async find(table_name: string) {

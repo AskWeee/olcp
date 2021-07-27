@@ -44,14 +44,18 @@ export class TadTableIndexColumnService {
   }
 
   async delete(params: TadTableIndexColumn) {
-    let myObject = [];
+    let myResult;
 
     if (params.id) {
-      myObject = await this.tableModel.find({id: params.id});
+      let myObject = await this.tableModel.findOne({id: params.id});
+
+      myResult = await this.tableModel.remove(myObject);
     } else if (params.table_id) {
-      myObject = await this.tableModel.find({table_id: params.table_id});
+      let myObject = await this.tableModel.find({table_id: params.table_id});
+
+      myResult = await this.tableModel.remove(myObject);
     }
 
-    return await this.tableModel.remove(myObject);
+    return myResult;
   }
 }

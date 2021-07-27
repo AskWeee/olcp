@@ -58,6 +58,10 @@ export class TadTableColumnService {
       let myObject = await this.tableModel.findOne({column_id: params.column_id});
 
       myResult = await this.tableModel.remove(myObject);
+    } else if (params.table_id) {
+      let myObject = await this.tableModel.find({table_id: params.table_id});
+
+      myResult = await this.tableModel.remove(myObject);
     }
 
     return myResult;

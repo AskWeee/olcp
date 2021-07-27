@@ -1,12 +1,36 @@
-import { Provide} from '@midwayjs/decorator';
+import {Inject, Provide} from '@midwayjs/decorator';
 import { InjectEntityModel } from '@midwayjs/orm';
 import { Repository } from 'typeorm';
 import {TadTable} from "../../entity/core/TadTable";
+import {TadTableColumnService} from "./TadTableColumn";
+import {TadTableIndexService} from "./TadTableIndex";
+import {TadTablePartitionService} from "./TadTablePartition";
+import {TadTableRelationService} from "./TadTableRelation";
+import {TadTableIndexColumnService} from "./TadTableIndexColumn";
+import {TadTableColumn} from "../../entity/core/TadTableColumn";
+import {TadTableIndex} from "../../entity/core/TadTableIndex";
+import {TadTableIndexColumn} from "../../entity/core/TadTableIndexColumn";
+import {TadTablePartition} from "../../entity/core/TadTablePartition";
 
 @Provide()
 export class TadTableService {
   @InjectEntityModel(TadTable)
   tableModel: Repository<TadTable>;
+
+  @Inject()
+  coreTadTableColumn: TadTableColumnService;
+
+  @Inject()
+  coreTadTableIndex: TadTableIndexService;
+
+  @Inject()
+  coreTadTablePartition: TadTablePartitionService;
+
+  @Inject()
+  coreTadTableRelation: TadTableRelationService;
+
+  @Inject()
+  coreTadTableIndexColumn: TadTableIndexColumnService;
 
   async findAll() {
     return await this.tableModel.find();
@@ -40,18 +64,30 @@ export class TadTableService {
   }
 
   async delete(params: TadTable) {
-    let myObject = await this.tableModel.findOne({table_id: params.table_id});
+    let myObject = await this.tableModel.find({table_id: params.table_id});
 
-    //todo >>>>> delete columns
-    // if (myObject !== undefined) {
-    //   await this.tableModel.remove(myObject);
-    //
     //   myResult = await this.tableModel.createQueryBuilder()
     //     .delete()
     //     .from(TadTableColumn)
     //     .where("table_id = :tid", {tid: id})
     //     .execute();
     // }
+
+    let myColumn = new TadTableColumn()
+    myColumn.table_id = params.table_id;
+    await this.coreTadTableColumn.delete(myColumn);
+
+    let myIndex = new TadTableIndex()
+    myIndex.table_id = params.table_id;
+    await this.coreTadTableIndex.delete(myIndex);
+
+    let myIndexColumn = new TadTableIndexColumn()
+    myIndexColumn.table_id = params.table_id;
+    await this.coreTadTableIndexColumn.delete(myIndexColumn);
+
+    let myPartition = new TadTablePartition()
+    myPartition.table_id = params.table_id;
+    await this.coreTadTablePartition.delete(myPartition);
 
     return await this.tableModel.remove(myObject);
   }

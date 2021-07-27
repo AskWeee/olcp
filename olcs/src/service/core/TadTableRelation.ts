@@ -9,11 +9,7 @@ export class TadTableRelationService {
   tableModel: Repository<TadTableRelation>;
 
   async findAll() {
-
-    let myResult = await this.tableModel.find();
-
-    console.log("findAll result = ", myResult);
-    return myResult;
+    return await this.tableModel.find();
   }
 
   async find(params: TadTableRelation) {
@@ -74,12 +70,13 @@ export class TadTableRelationService {
   }
 
   async delete(params: TadTableRelation) {
+    let myResult;
 
-    let myObject = await this.tableModel.findOne(params.id);
+    if (params.id) {
+      let myObject = await this.tableModel.findOne({id: params.id});
+      myResult = await this.tableModel.remove(myObject);
+    }
 
-    const myResult = await this.tableModel.remove(myObject);
-
-    console.log('delete result = ', myResult);
     return myResult;
   }
 }

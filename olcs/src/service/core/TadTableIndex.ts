@@ -9,11 +9,7 @@ export class TadTableIndexService {
   tableModel: Repository<TadTableIndex>;
 
   async findAll() {
-
-    let myResult = await this.tableModel.find();
-
-    console.log("findAll result = ", myResult);
-    return myResult;
+    return await this.tableModel.find();
   }
 
   async find(params: TadTableIndex) {
@@ -58,20 +54,16 @@ export class TadTableIndexService {
   }
 
   async delete(params: TadTableIndex) {
+    let myResult;
 
-    //if ((params.id) && (params.table_id)) return null
-
-    let myObject = [];
     if (params.id) {
-      myObject = await this.tableModel.find({id: params.id});
+      let myObject = await this.tableModel.findOne({id: params.id});
+      myResult = await this.tableModel.remove(myObject);
     } else if (params.table_id) {
-      myObject = await this.tableModel.find({table_id: params.table_id});
+      let myObject = await this.tableModel.find({table_id: params.table_id});
+      myResult = await this.tableModel.remove(myObject);
     }
 
-    console.log(params, myObject);
-    const myResult = await this.tableModel.remove(myObject);
-
-    console.log('delete result = ', myResult);
     return myResult;
   }
 }

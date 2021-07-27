@@ -10,10 +10,7 @@ export class TadDbConnectionInfoService {
   tadDbConnectionInfoModel: Repository<TadDbConnectionInfo>;
 
   async findAll() {
-    let myResult = await this.tadDbConnectionInfoModel.find();
-
-    console.log("findAll result = ", myResult);
-    return myResult;
+    return await this.tadDbConnectionInfoModel.find();
   }
 
   async find(id: number) {

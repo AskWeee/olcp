@@ -9,10 +9,7 @@ export class TadDictService {
   tableModel: Repository<TadDict>;
 
   async findAll() {
-    let myResult = await this.tableModel.find();
-
-    console.log("findAll result = ", myResult);
-    return myResult;
+    return await this.tableModel.find();
   }
 
   async find(id: number) {
