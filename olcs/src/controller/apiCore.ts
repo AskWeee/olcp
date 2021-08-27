@@ -35,6 +35,12 @@ import {TadTableIndexColumn} from "../entity/core/TadTableIndexColumn";
 import {TadTableIndexColumnService} from "../service/core/TadTableIndexColumn";
 import {TadOlcEvent} from "../entity/core/TadOlcEvent";
 import {TadOlcEventService} from "../service/core/TadOlcEvent";
+import {TadTableErService} from "../service/core/TadTableEr";
+import {TadTableEr} from "../entity/core/TadTableEr";
+import {TadTableErTree} from "../entity/core/TadTableErTree";
+import {TadTableErTreeService} from "../service/core/TadTableErTree";
+import {TadTableErTableService} from "../service/core/TadTableErTable";
+import {TadTableErTable} from "../entity/core/TadTableErTable";
 
 @Provide()
 @Controller('/api/core', { tagName: 'Core Group', description: '系统核心业务API'})
@@ -95,6 +101,114 @@ export class APICoreController {
 
   @Inject()
   coreTadOlcEvent: TadOlcEventService;
+
+  @Inject()
+  coreTadTableEr: TadTableErService;
+
+  @Inject()
+  tadTableErTreeService: TadTableErTreeService;
+
+  @Inject()
+  tadTableErTableService: TadTableErTableService;
+
+  @Post('/get_table_er_tables')
+  async getTableErTables(@Body(ALL) params: TadTableErTable): Promise<any> {
+    let restResult = new RestResult();
+
+    restResult.data = await this.tadTableErTableService.find(params);
+
+    return restResult;
+  }
+
+  @Post('/add_table_er_table')
+  async addTableErTable(@Body(ALL) params: TadTableErTable): Promise<any> {
+    let restResult = new RestResult();
+
+    restResult.data = await this.tadTableErTableService.save(params);
+
+    return restResult;
+  }
+
+  @Post('/delete_table_er_table')
+  async deleteTableErTable(@Body(ALL) params: TadTableErTable): Promise<any> {
+    let restResult = new RestResult();
+
+    restResult.data = await this.tadTableErTableService.delete(params);
+
+    return restResult;
+  }
+
+  @Post('/get_table_er_trees')
+  async getTableErTrees(): Promise<any> {
+    let restResult = new RestResult();
+
+    restResult.data = await this.tadTableErTreeService.findAll();
+
+    return restResult;
+  }
+
+  @Post('/add_table_er_tree')
+  async addTableErTree(@Body(ALL) params: TadTableErTree): Promise<any> {
+    let restResult = new RestResult();
+
+    restResult.data = await this.tadTableErTreeService.save(params);
+
+    return restResult;
+  }
+
+  @Post('/update_table_er_tree')
+  async updateTableErTree(@Body(ALL) params: TadTableErTree): Promise<any> {
+    let restResult = new RestResult();
+
+    restResult.data = await this.tadTableErTreeService.update(params);
+
+    return restResult;
+  }
+
+  @Post('/delete_table_er_tree')
+  async deleteTableErTree(@Body(ALL) params: TadTableErTree): Promise<any> {
+    let restResult = new RestResult();
+
+    restResult.data = await this.tadTableErTreeService.delete(params);
+
+    return restResult;
+  }
+
+  @Post('/get_table_er')
+  async getTableEr(@Body(ALL) params: TadTableEr): Promise<any> {
+    let restResult = new RestResult();
+
+    restResult.data = await this.coreTadTableEr.find(params);
+
+    return restResult;
+  }
+
+  @Post('/add_table_er')
+  async addTableEr(@Body(ALL) params: TadTableEr): Promise<any> {
+    let restResult = new RestResult();
+
+    restResult.data = await this.coreTadTableEr.save(params);
+
+    return restResult;
+  }
+
+  @Post('/update_table_er')
+  async updateTableEr(@Body(ALL) params: TadTableEr): Promise<any> {
+    let restResult = new RestResult();
+
+    restResult.data = await this.coreTadTableEr.update(params);
+
+    return restResult;
+  }
+
+  @Post('/delete_table_er')
+  async deleteTableEr(@Body(ALL) params: TadTableEr): Promise<any> {
+    let restResult = new RestResult();
+
+    restResult.data = await this.coreTadTableEr.delete(params);
+
+    return restResult;
+  }
 
   @Post('/get_olc_events')
   async getOlcEvents(): Promise<any> {
