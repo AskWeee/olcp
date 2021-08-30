@@ -41,6 +41,8 @@ import {TadTableErTree} from "../entity/core/TadTableErTree";
 import {TadTableErTreeService} from "../service/core/TadTableErTree";
 import {TadTableErTableService} from "../service/core/TadTableErTable";
 import {TadTableErTable} from "../entity/core/TadTableErTable";
+import {TadHelpTreeService} from "../service/core/TadHelpTree";
+import {TadHelpTree} from "../entity/core/TadHelpTree";
 
 @Provide()
 @Controller('/api/core', { tagName: 'Core Group', description: '系统核心业务API'})
@@ -110,6 +112,45 @@ export class APICoreController {
 
   @Inject()
   tadTableErTableService: TadTableErTableService;
+
+  @Inject()
+  tadHelpTreeService: TadHelpTreeService;
+
+  @Post('/get_help_trees')
+  async getHelpTrees(): Promise<any> {
+    let restResult = new RestResult();
+
+    restResult.data = await this.tadHelpTreeService.findAll();
+
+    return restResult;
+  }
+
+  @Post('/add_help_tree')
+  async addHelpTree(@Body(ALL) params: TadHelpTree): Promise<any> {
+    let restResult = new RestResult();
+
+    restResult.data = await this.tadHelpTreeService.save(params);
+
+    return restResult;
+  }
+
+  @Post('/update_help_tree')
+  async updateHelpTree(@Body(ALL) params: TadHelpTree): Promise<any> {
+    let restResult = new RestResult();
+
+    restResult.data = await this.tadHelpTreeService.update(params);
+
+    return restResult;
+  }
+
+  @Post('/delete_help_tree')
+  async deleteHelpTree(@Body(ALL) params: TadHelpTree): Promise<any> {
+    let restResult = new RestResult();
+
+    restResult.data = await this.tadHelpTreeService.delete(params);
+
+    return restResult;
+  }
 
   @Post('/get_table_er_tables')
   async getTableErTables(@Body(ALL) params: TadTableErTable): Promise<any> {

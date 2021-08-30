@@ -11,6 +11,10 @@ export class TadOlcEvent {
 
   @CreateApiPropertyDoc('')
   @Column()
+  dir_id: number;
+
+  @CreateApiPropertyDoc('')
+  @Column()
   type: string;
 
   @CreateApiPropertyDoc('')

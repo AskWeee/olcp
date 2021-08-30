@@ -14,11 +14,22 @@ export class TadRtKpiCounterService {
   ologModel: Repository<TadKpiOlog>;
 
   async findAll() {
-    return await this.tableModel.find({
-      order: {
-        counter_zhname: "ASC",
-      }
-    });
+    let myResult = this.tableModel.createQueryBuilder("kc")
+      .select("kc.id as id, " +
+        "kc.sid as sid, " +
+        "kc.counter_zhname as counter_zhname, " +
+        "kc.counter_enname as counter_enname, " +
+        "kc.counter_field as counter_field, " +
+        "substr(kc.counter_field, 8, length(kc.counter_field) - 7) + 0 as nc")
+      .orderBy("nc")
+      .getRawMany();
+    return myResult;
+    // return await this.tableModel.find({
+    //   order: {
+    //     counter_field: "ASC",
+    //     counter_zhname: "ASC",
+    //   }
+    // });
   }
 
   async find(params: TadRtKpiCounter) {

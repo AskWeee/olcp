@@ -9,7 +9,12 @@ export class TadOlcEventService {
   tableModel: Repository<TadOlcEvent>;
 
   async findAll() {
-    return await this.tableModel.find();
+    return await this.tableModel.find({
+      order: {
+        type: "DESC",
+        title: "ASC"
+      },
+    });
   }
 
   async find(params: TadOlcEvent) {
@@ -23,6 +28,7 @@ export class TadOlcEventService {
   async update(params: TadOlcEvent) {
     let myObject = await this.tableModel.findOne(params.uuid);
 
+    if (params.dir_id !== null) myObject.dir_id = params.dir_id;
     if (params.title !== null) myObject.title = params.title;
     if (params.desc !== null) myObject.desc = params.desc;
     if (params.type !== null) myObject.type = params.type;
