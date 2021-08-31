@@ -2,11 +2,15 @@ import {Provide} from '@midwayjs/decorator';
 import {InjectEntityModel} from '@midwayjs/orm';
 import {Repository} from 'typeorm';
 import {TadTableErTree} from "../../entity/core/TadTableErTree";
+import {TadTableEr} from "../../entity/core/TadTableEr";
 
 @Provide()
 export class TadTableErTreeService {
   @InjectEntityModel(TadTableErTree)
   tableModel: Repository<TadTableErTree>;
+
+  @InjectEntityModel(TadTableEr)
+  erModel: Repository<TadTableEr>;
 
   async findAll() {
     return await this.tableModel.find({
@@ -27,11 +31,20 @@ export class TadTableErTreeService {
   }
 
   async save(params: TadTableErTree) {
-    return await this.tableModel.save(params);
+    let myResult = await this.tableModel.save(params);
+
+    if (params.node_type === "NODE_ER_DIAGRAM") {
+      let myEr = new TadTableEr();
+      myEr.er_id = myResult.uuid;
+      myEr.er_content = "{}";
+      await this.erModel.save(myEr);
+    }
+
+    return myResult
   }
 
   async update(params: TadTableErTree) {
-    let myObject = await this.tableModel.findOne(params.id);
+    let myObject = await this.tableModel.findOne(params.uuid);
 
     myObject.node_zhname = params.node_zhname;
 
@@ -42,9 +55,9 @@ export class TadTableErTreeService {
     let myObject;
 
     console.log(params);
-    if (params.id !== null) {
+    if (params.uuid !== null) {
       myObject = await this.tableModel.findOne({
-        id: params.id
+        uuid: params.uuid
       });
 
       console.log(myObject);

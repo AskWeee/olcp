@@ -153,10 +153,10 @@ export class APICoreController {
   }
 
   @Post('/get_table_er_tables')
-  async getTableErTables(@Body(ALL) params: TadTableErTable): Promise<any> {
+  async getTableErTables(): Promise<any> {
     let restResult = new RestResult();
 
-    restResult.data = await this.tadTableErTableService.find(params);
+    restResult.data = await this.tadTableErTableService.findAll();
 
     return restResult;
   }

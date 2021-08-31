@@ -7,7 +7,7 @@ export class TadTableErTree {
 
   @CreateApiPropertyDoc('')
   @PrimaryGeneratedColumn()
-  id: number;
+  uuid: number;
 
   @CreateApiPropertyDoc('')
   @Column()

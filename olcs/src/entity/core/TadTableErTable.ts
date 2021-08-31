@@ -7,6 +7,10 @@ export class TadTableErTable {
 
   @CreateApiPropertyDoc('')
   @PrimaryColumn({ type: "int" })
+  uuid;
+
+  @CreateApiPropertyDoc('')
+  @Column({ type: "int" })
   er_id;
 
   @CreateApiPropertyDoc('')

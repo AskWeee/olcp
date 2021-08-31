@@ -9,6 +9,10 @@ export class TadTableErTableService {
   @InjectEntityModel(TadTableErTable)
   tableModel: Repository<TadTableErTable>;
 
+  async findAll() {
+    return await this.tableModel.find();
+  }
+
   async find(params: TadTableErTable) {
     if (params.er_id === null || params.er_id === undefined) return [];
 
