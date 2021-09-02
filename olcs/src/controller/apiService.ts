@@ -199,6 +199,15 @@ export class APIServiceController {
     return restResult;
   }
 
+  @Post('/update_kpi_counter')
+  async updateKpiCounter(@Body(ALL) params: TadRtKpiCounter): Promise<any> {
+    let restResult = new RestResult();
+
+    restResult.data = await this.tadKpiCounterService.update(params);
+
+    return restResult;
+  }
+
   @Post('/delete_kpi_counter')
   async deleteKpiCounter(@Body(ALL) params: TadRtKpiCounter): Promise<any> {
     let restResult = new RestResult();

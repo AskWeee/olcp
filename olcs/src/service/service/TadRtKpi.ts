@@ -70,7 +70,7 @@ export class TadRtKpiService {
     olog.operation = "update";
     olog.object_type = "kpi";
     olog.object_id = newKpi.id;
-    this.ologModel.save(olog);
+    await this.ologModel.save(olog);
 
     return newKpi;
   }

@@ -1,5 +1,5 @@
 import {EntityModel} from "@midwayjs/orm";
-import {Column, PrimaryColumn, PrimaryGeneratedColumn} from 'typeorm';
+import {Column, PrimaryGeneratedColumn} from 'typeorm';
 import {CreateApiPropertyDoc} from "@midwayjs/swagger";
 
 @EntityModel('tad_rtkpicounter')
@@ -18,7 +18,7 @@ export class TadRtKpiCounter {
   counter_zhname: string;
 
   @CreateApiPropertyDoc('')
-  @PrimaryColumn()
+  @Column()
   counter_enname: string;
 
   @CreateApiPropertyDoc('')

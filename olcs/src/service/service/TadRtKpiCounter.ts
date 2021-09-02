@@ -45,9 +45,27 @@ export class TadRtKpiCounterService {
     olog.operation = "add";
     olog.object_type = "counter";
     olog.object_id = newCounter.id;
-    this.ologModel.save(olog);
+    await this.ologModel.save(olog);
 
     return newCounter;
+  }
+
+  async update(params: TadRtKpiCounter) {
+    let counter = await this.tableModel.findOne(params.id);
+
+    counter.counter_field = params.counter_field;
+
+    let newCounter = await this.tableModel.save(counter);
+
+    let olog = new TadKpiOlog();
+    olog.user_name = "KKK";
+    olog.event_time = moment().format("yyyy-MM-DD HH:mm:ss");
+    olog.operation = "update";
+    olog.object_type = "counter";
+    olog.object_id = counter.id;
+    await this.ologModel.save(olog);
+
+    return newCounter
   }
 
   async fix(params: TadRtKpiCounter) {
