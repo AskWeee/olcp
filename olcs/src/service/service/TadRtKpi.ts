@@ -16,8 +16,8 @@ export class TadRtKpiService {
   async findAll() {
     return await this.tableModel.find({
         order: {
-          kpi_zhname: "ASC",
           kpi_field: "ASC",
+          kpi_zhname: "ASC",
         }
       });
   }
