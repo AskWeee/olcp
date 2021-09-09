@@ -31,16 +31,17 @@ export class TadMddTreeService {
   }
 
   async save(params: TadMddTree) {
-    let myResult = await this.tableModel.save(params);
-
-    if (params.node_type === "NODE_MDD_FLOW") {
-      let myEr = new TadMddFlow();
-      myEr.mdd_flow_id = myResult.uuid;
-      myEr.mdd_flow_content = "{}";
-      await this.erModel.save(myEr);
-    }
-
-    return myResult
+    // let myResult = await this.tableModel.save(params);
+    //
+    // if (params.node_type === "NODE_MDD_FLOW") {
+    //   let myEr = new TadMddFlow();
+    //   myEr.mdd_flow_id = myResult.uuid;
+    //   myEr.mdd_flow_content = "{}";
+    //   await this.erModel.save(myEr);
+    // }
+    //
+    // return myResult
+    return await this.tableModel.save(params);
   }
 
   async update(params: TadMddTree) {

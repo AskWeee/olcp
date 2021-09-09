@@ -1,16 +1,24 @@
 import {EntityModel} from "@midwayjs/orm";
-import {Column, PrimaryColumn} from 'typeorm';
+import {Column, PrimaryGeneratedColumn} from 'typeorm';
 import {CreateApiPropertyDoc} from "@midwayjs/swagger";
 
 @EntityModel('tad_mdd_flow')
 export class TadMddFlow {
 
   @CreateApiPropertyDoc('')
-  @PrimaryColumn({ type: "int" })
-  mdd_flow_id;
+  @PrimaryGeneratedColumn({ type: "int" })
+  uuid;
 
   @CreateApiPropertyDoc('')
-  @Column({ type: "blob" })
-  mdd_flow_content;
+  @Column({ type: "int" })
+  flow_id;
+
+  @CreateApiPropertyDoc('')
+  @Column({ type: "text" })
+  flow_content;
+
+  @CreateApiPropertyDoc('')
+  @Column({ type: "int" })
+  content_index;
 }
 
