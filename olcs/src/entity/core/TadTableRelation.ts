@@ -7,7 +7,7 @@ export class TadTableRelation {
 
   @CreateApiPropertyDoc('')
   @PrimaryGeneratedColumn()
-  id: number;
+  uuid: number;
 
   @CreateApiPropertyDoc('')
   @Column()

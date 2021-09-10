@@ -943,11 +943,8 @@ export class APICoreController {
     return restResult;
   }
 
-  // ********** ********** ********** ********** ********** ********** ********** ********** ********** **********
-
   @Post('/get_table_relations')
   async getTableRelations(): Promise<any> {
-
     let restResult = new RestResult();
 
     restResult.data = await this.coreTadTableRelation.findAll();
@@ -957,7 +954,6 @@ export class APICoreController {
 
   @Post('/get_table_relation')
   async getTableRelation(@Body(ALL) params: TadTableRelation): Promise<any> {
-
     let restResult = new RestResult();
 
     restResult.data = await this.coreTadTableRelation.find(params);
@@ -967,7 +963,6 @@ export class APICoreController {
 
   @Post('/add_table_relation')
   async addTableRelation(@Body(ALL) params: TadTableRelation): Promise<any> {
-
     let restResult = new RestResult();
 
     restResult.data = await this.coreTadTableRelation.save(params);
@@ -977,7 +972,6 @@ export class APICoreController {
 
   @Post('/update_table_relation')
   async updateTableRelation(@Body(ALL) params: TadTableRelation): Promise<any> {
-
     let restResult = new RestResult();
 
     restResult.data = await this.coreTadTableRelation.update(params);
@@ -987,11 +981,20 @@ export class APICoreController {
 
   @Post('/delete_table_relation')
   async deleteTableRelation(@Body(ALL) params: TadTableRelation): Promise<any> {
-
     let restResult = new RestResult();
 
     restResult.data = await this.coreTadTableRelation.delete(params);
 
     return restResult;
   }
+
+  @Post('/test_table_relation')
+  async testTableRelation(@Body(ALL) params: TadTableRelation): Promise<any> {
+    let restResult = new RestResult();
+
+    restResult.data = await this.coreTadTableRelation.test(params);
+
+    return restResult;
+  }
+
 }
