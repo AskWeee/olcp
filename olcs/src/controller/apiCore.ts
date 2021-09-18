@@ -170,6 +170,15 @@ export class APICoreController {
     return restResult;
   }
 
+  @Post('/update_table_er_table')
+  async updateTableErTable(@Body(ALL) params: TadTableErTable): Promise<any> {
+    let restResult = new RestResult();
+
+    restResult.data = await this.tadTableErTableService.update(params);
+
+    return restResult;
+  }
+
   @Post('/delete_table_er_table')
   async deleteTableErTable(@Body(ALL) params: TadTableErTable): Promise<any> {
     let restResult = new RestResult();

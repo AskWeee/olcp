@@ -3,7 +3,6 @@ import { InjectEntityModel } from '@midwayjs/orm';
 import { Repository } from 'typeorm';
 import {TadTableErTable} from "../../entity/core/TadTableErTable";
 
-
 @Provide()
 export class TadTableErTableService {
   @InjectEntityModel(TadTableErTable)
@@ -23,6 +22,15 @@ export class TadTableErTableService {
     let myObject = new TadTableErTable();
     myObject.er_id = params.er_id;
     myObject.table_id = params.table_id;
+
+    return await this.tableModel.save(myObject);
+  }
+
+  async update(params: TadTableErTable) {
+    let myObject = await this.tableModel.findOne(params.uuid);
+
+    myObject.position_x = params.position_x;
+    myObject.position_y = params.position_y;
 
     return await this.tableModel.save(myObject);
   }

@@ -16,5 +16,13 @@ export class TadTableErTable {
   @CreateApiPropertyDoc('')
   @Column({ type: "int" })
   table_id;
+
+  @CreateApiPropertyDoc('')
+  @Column({ type: "float" })
+  position_x;
+
+  @CreateApiPropertyDoc('')
+  @Column({ type: "float" })
+  position_y;
 }
 

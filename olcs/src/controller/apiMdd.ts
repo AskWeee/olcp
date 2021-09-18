@@ -5,6 +5,8 @@ import {TadMddTreeService} from "../service/mdd/TadMddTree";
 import {TadMddFlowService} from "../service/mdd/TadMddFlow";
 import {TadMddTree} from "../entity/mdd/TadMddTree";
 import {TadMddFlow} from "../entity/mdd/TadMddFlow";
+import {TadMddFlowNodeService} from "../service/mdd/TadMddFlowNode";
+import {TadMddFlowNode} from "../entity/mdd/TadMddFlowNode";
 
 @Provide()
 @Controller('/api/mdd', { tagName: 'MDD Group', description: 'MDD相关API'})
@@ -17,6 +19,45 @@ export class APIMddController {
 
   @Inject()
   tadMddFlowService: TadMddFlowService;
+
+  @Inject()
+  tadMddFlowNodeService: TadMddFlowNodeService;
+
+  @Post('/get_mdd_flow_nodes')
+  async getMddFlowNodes(@Body(ALL) params: TadMddFlowNode): Promise<any> {
+    let restResult = new RestResult();
+
+    restResult.data = await this.tadMddFlowNodeService.find(params);
+
+    return restResult;
+  }
+
+  @Post('/add_mdd_flow_node')
+  async addMddFlowNode(@Body(ALL) params: TadMddFlowNode): Promise<any> {
+    let restResult = new RestResult();
+
+    restResult.data = await this.tadMddFlowNodeService.save(params);
+
+    return restResult;
+  }
+
+  @Post('/update_mdd_flow_node')
+  async updateMddFlowNode(@Body(ALL) params: TadMddFlowNode): Promise<any> {
+    let restResult = new RestResult();
+
+    restResult.data = await this.tadMddFlowNodeService.update(params);
+
+    return restResult;
+  }
+
+  @Post('/delete_mdd_flow_nodes')
+  async deleteMddFlowNodes(@Body(ALL) params: TadMddFlowNode): Promise<any> {
+    let restResult = new RestResult();
+
+    restResult.data = await this.tadMddFlowNodeService.delete(params);
+
+    return restResult;
+  }
 
   @Post('/get_mdd_trees')
   async getMddTrees(): Promise<any> {
