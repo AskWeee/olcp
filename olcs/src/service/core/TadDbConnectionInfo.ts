@@ -16,18 +16,11 @@ export class TadDbConnectionInfoService {
   async find(id: number) {
     if (id === undefined || id.toString() === '') return null;
 
-    let myResult = await this.tadDbConnectionInfoModel.findOne({connection_id: id});
-
-    console.log("find result = ", myResult);
-    return myResult;
+    return await this.tadDbConnectionInfoModel.findOne({connection_id: id});
   }
 
   async save(connection: TadDbConnectionInfo) {
-
-    const myResult = await this.tadDbConnectionInfoModel.save(connection);
-
-    console.log('save result = ', myResult);
-    return myResult;
+    return await this.tadDbConnectionInfoModel.save(connection);
   }
 
   async update(connection: TadDbConnectionInfo) {
@@ -42,19 +35,13 @@ export class TadDbConnectionInfoService {
     myObject.db_username = connection.db_username;
     myObject.db_password = connection.db_password;
 
-    const myResult = await this.tadDbConnectionInfoModel.save(myObject);
-
-    console.log('update result = ', myResult);
-    return myResult;
+    return await this.tadDbConnectionInfoModel.save(myObject);
   }
 
   async delete(id: number) {
     let myObject = await this.tadDbConnectionInfoModel.findOne(id);
 
-    const myResult = await this.tadDbConnectionInfoModel.remove(myObject);
-
-    console.log('delete result = ', myResult);
-    return myResult;
+    return await this.tadDbConnectionInfoModel.remove(myObject);
   }
 
   async getSchemas(connInfo: TadDbConnectionInfo) {
@@ -209,7 +196,6 @@ export class TadDbConnectionInfoService {
                 " from USER_INDEXES i" +
                 " left join USER_IND_COLUMNS ic on i.TABLE_NAME = ic.TABLE_NAME and i.INDEX_NAME = ic.INDEX_NAME" +
                 " order by i.TABLE_NAME, i.INDEX_NAME, ic.COLUMN_POSITION";
-              console.log(strSql);
 
               connection.execute(strSql, function (errQuery, results) {
                 if (errQuery) {
@@ -284,8 +270,7 @@ export class TadDbConnectionInfoService {
                 " from USER_PART_TABLES pt" +
                 " left join ALL_TAB_PARTITIONS tp on pt.TABLE_NAME = tp.TABLE_NAME" +
                 " left join ALL_PART_KEY_COLUMNS pc on pt.TABLE_NAME = pc.NAME and pc.OBJECT_TYPE = 'TABLE'";
-                // " where pt.PARTITIONING_KEY_COUNT = 1";
-              console.log(strSql);
+              // " where pt.PARTITIONING_KEY_COUNT = 1";
 
               connection.execute(strSql, function (errQuery, results) {
                 if (errQuery) {
@@ -313,7 +298,6 @@ export class TadDbConnectionInfoService {
     myResult.data.push(myResultIndexes);
     myResult.data.push(myResultPartitions)
 
-    console.log("getSchemas result = ", myResult);
     return myResult;
   }
 
@@ -398,7 +382,7 @@ from ALL_PART_TABLES;
               " from TAI_RTKPISCHEMA ks" +
               " left join TAI_RTKPIS k on ks.SCHEMA_ID = k.SCHEMA_ID" +
               " order by ks.schema_zhname, k.kpi_id";
-            console.log(strSql);
+
             if (myDbType === 'mysql') {
               connection.query(strSql, function (errQuery, results) {
                 if (errQuery) {
@@ -445,7 +429,6 @@ from ALL_PART_TABLES;
     let myResult = new RestResult();
     myResult.data.push(myResultTables);
 
-    console.log("getSchemas result = ", myResult);
     return myResult;
 
   }
@@ -473,7 +456,6 @@ from ALL_PART_TABLES;
       return new Promise((resolve, reject) => {
         myPool.getConnection(function (err, connection) {
           if (err) {
-            console.log(err);
             let message = {success: false, message: {errno: err.errno, code: err.code}}
             resolve(message)
           } else {
@@ -487,7 +469,115 @@ from ALL_PART_TABLES;
 
     myResult = await myTest();
 
-    console.log("test result = ", myResult);
     return myResult;
   }
+
+  async getTableRecords(connInfo: TadDbConnectionInfo) {
+    let myResultTables;
+    let myDb;
+    let myPool;
+    let myDbType = connInfo.db_type.toLowerCase();
+
+    if (myDbType === "mysql") {
+      myDb = require("mysql");
+    } else if (myDbType === 'oracle') {
+      myDb = require("oracledb");
+    }
+
+    myPool = await myDb.createPool({
+      host: connInfo.db_host,
+      port: connInfo.db_port,
+      user: connInfo.db_username,
+      password: connInfo.db_password,
+      database: connInfo.db_sid,
+      connectString: connInfo.db_host + ":" + connInfo.db_port + "/" + connInfo.db_sid
+    });
+
+    let myGetRecords = function () {
+      let getResult = new RestResult();
+
+      return new Promise((resolve, reject) => {
+        myPool.getConnection(function (err, connection) {
+          if (err) {
+            console.log(err);
+            getResult.code = err.code;
+            getResult.success = false;
+            getResult.message = err.errno;
+            resolve(getResult)
+          } else {
+            let strSql = "select * from " + connInfo.tag.tableName;
+
+            if (myDbType === 'mysql') {
+              connection.query(strSql, function (errQuery, results) {
+                if (errQuery) {
+                  getResult.code = errQuery.code;
+                  getResult.success = false;
+                  getResult.message = errQuery.errno;
+                  resolve(getResult);
+                }
+                getResult.data.push(results);
+                let strSqlMeta = "select table_schema, column_name, data_type" +
+                  " from information_schema.COLUMNS" +
+                  " where table_name = '" + connInfo.tag.tableName + "'";
+                connection.query(strSqlMeta, function (errQuery, resultsMeta) {
+                  if (!errQuery) {
+                    getResult.data.push(resultsMeta);
+                  }
+                  resolve(getResult);
+                  connection.release();
+                });
+              });
+            } else if (myDbType === 'oracle') {
+
+              connection.execute(strSql, function (errQuery, results) {
+                if (errQuery) {
+                  getResult.code = errQuery.code;
+                  getResult.success = false;
+                  getResult.message = errQuery.errno;
+                  resolve(getResult);
+                }
+
+                let rowsNew = [];
+                let n = 0;
+                results.rows.forEach((itemRecord: any) => {
+                  rowsNew[n] = {};
+                  for (let i = 0; i < itemRecord.length; i++) {
+                    let columnName = results.metaData[i].name.toLowerCase();
+                    rowsNew[n][columnName] = itemRecord[i]
+                  }
+                  n++;
+                })
+                getResult.data.push(rowsNew);
+                let strSqlMeta = "select '" + connInfo.db_sid + "' table_schema, column_name, data_type" +
+                  " from USER_TAB_COLUMNS" +
+                  " where table_name = '" + connInfo.tag.tableName.toUpperCase() + "'";
+                connection.execute(strSqlMeta, function (errQuery, resultsMeta) {
+                  if (!errQuery) {
+                    let rowsMetaNew = [];
+                    let n = 0;
+                    resultsMeta.rows.forEach((itemRecordMeta: any) => {
+                      rowsMetaNew[n] = {};
+                      for (let i = 0; i < itemRecordMeta.length; i++) {
+                        rowsMetaNew[n][resultsMeta.metaData[i].name.toLowerCase()] = itemRecordMeta[i].toLowerCase();
+                      }
+                      n++;
+                    })
+                    getResult.data.push(rowsMetaNew);
+                  } else {
+                    console.log(errQuery);
+                  }
+                  resolve(getResult);
+                  connection.release();
+                });
+              });
+            }
+          }
+        });
+      });
+    }
+    myResultTables = await myGetRecords();
+
+    return myResultTables;
+  }
+
 }

@@ -386,10 +386,14 @@ export class APICoreController {
   async testDbConnection(@Body(ALL) connInfo: TadDbConnectionInfo): Promise<any> {
     let restResult = new RestResult();
 
-    const data = await this.coreTadDbConnectionInfoService.test(connInfo);
-    restResult.data = data;
+    restResult.data = await this.coreTadDbConnectionInfoService.test(connInfo);
 
     return restResult;
+  }
+
+  @Post('/get_table_records')
+  async getTableRecords(@Body(ALL) connInfo: TadDbConnectionInfo): Promise<any> {
+    return await this.coreTadDbConnectionInfoService.getTableRecords(connInfo);
   }
 
   // @Post('/get_products')
@@ -428,7 +432,6 @@ export class APICoreController {
 
     restResult.data = await this.coreTadProductLineInfoService.update(params);
 
-    console.log(params, restResult.data);
     return restResult;
   }
 

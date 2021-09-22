@@ -37,6 +37,10 @@ export class TadDbConnectionInfo {
   @Column()
   db_type: string;
 
+  tag: {
+    tableName: string
+  };
+
   /*
 let t = {
     "connection_id": 1,
