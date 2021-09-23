@@ -7,6 +7,8 @@ import {TadMddTree} from "../entity/mdd/TadMddTree";
 import {TadMddFlow} from "../entity/mdd/TadMddFlow";
 import {TadMddFlowNodeService} from "../service/mdd/TadMddFlowNode";
 import {TadMddFlowNode} from "../entity/mdd/TadMddFlowNode";
+import {TadMddFlowEdgeService} from "../service/mdd/TadMddFlowEdge";
+import {TadMddFlowEdge} from "../entity/mdd/TadMddFlowEdge";
 
 @Provide()
 @Controller('/api/mdd', { tagName: 'MDD Group', description: 'MDD相关API'})
@@ -22,6 +24,45 @@ export class APIMddController {
 
   @Inject()
   tadMddFlowNodeService: TadMddFlowNodeService;
+
+  @Inject()
+  tadMddFlowEdgeService: TadMddFlowEdgeService;
+
+  @Post('/get_mdd_flow_edges')
+  async getMddFlowEdges(@Body(ALL) params: TadMddFlowEdge): Promise<any> {
+    let restResult = new RestResult();
+
+    restResult.data = await this.tadMddFlowEdgeService.find(params);
+
+    return restResult;
+  }
+
+  @Post('/add_mdd_flow_edge')
+  async addMddFlowEdge(@Body(ALL) params: TadMddFlowEdge): Promise<any> {
+    let restResult = new RestResult();
+
+    restResult.data = await this.tadMddFlowEdgeService.save(params);
+
+    return restResult;
+  }
+
+  @Post('/update_mdd_flow_edge')
+  async updateMddFlowEdge(@Body(ALL) params: TadMddFlowEdge): Promise<any> {
+    let restResult = new RestResult();
+
+    restResult.data = await this.tadMddFlowEdgeService.update(params);
+
+    return restResult;
+  }
+
+  @Post('/delete_mdd_flow_edges')
+  async deleteMddFlowEdges(@Body(ALL) params: TadMddFlowEdge): Promise<any> {
+    let restResult = new RestResult();
+
+    restResult.data = await this.tadMddFlowEdgeService.delete(params);
+
+    return restResult;
+  }
 
   @Post('/get_mdd_flow_nodes')
   async getMddFlowNodes(@Body(ALL) params: TadMddFlowNode): Promise<any> {
