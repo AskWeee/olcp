@@ -38,7 +38,8 @@ export class TadDbConnectionInfo {
   db_type: string;
 
   tag: {
-    tableName: string
+    tableName: string,
+    rows: number,
   };
 
   /*

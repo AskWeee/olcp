@@ -508,6 +508,12 @@ from ALL_PART_TABLES;
             let strSql = "select * from " + connInfo.tag.tableName;
 
             if (myDbType === 'mysql') {
+              if (connInfo.tag.rows === undefined) {
+                connInfo.tag.rows = 100;
+              } else if ((connInfo.tag.rows === -1) || (connInfo.tag.rows >= 1000)) {
+                connInfo.tag.rows = 200;
+              }
+              strSql += " limit " + connInfo.tag.rows;
               connection.query(strSql, function (errQuery, results) {
                 if (errQuery) {
                   getResult.code = errQuery.code;
